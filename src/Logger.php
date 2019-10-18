@@ -8,45 +8,45 @@
 class Logger
 {
 	/**
-	 * Emergency level
+	 * Emergency level.
 	 */
 	public const EMERGENCY = 7;
 	/**
-	 * Alert level
+	 * Alert level.
 	 */
 	public const ALERT = 6;
 	/**
-	 * CRITICAL level
+	 * CRITICAL level.
 	 */
 	public const CRITICAL = 5;
 	/**
-	 * Error level
+	 * Error level.
 	 */
 	public const ERROR = 4;
 	/**
-	 * Warning level
+	 * Warning level.
 	 */
 	public const WARNING = 3;
 	/**
-	 * Notice level
+	 * Notice level.
 	 */
 	public const NOTICE = 2;
 	/**
-	 * Info level
+	 * Info level.
 	 */
 	public const INFO = 1;
 	/**
-	 * Debug level
+	 * Debug level.
 	 */
 	public const DEBUG = 0;
 	/**
-	 * Logs directory path
+	 * Logs directory path.
 	 *
 	 * @var string
 	 */
 	protected $directory;
 	/**
-	 * Active log level
+	 * Active log level.
 	 *
 	 * @var int
 	 */
@@ -90,7 +90,8 @@ class Logger
 			return true;
 		}
 		$message = $this->replaceContext($message, $context);
-		$message = \date('H:i:s') . ' ' . $level . ' ' . \trim($message) . ' ';
+		$message = \date('H:i:s') . ' ' . $this->getLevelName($level) . ' '
+			. $this->sanitizeMessage($message) . ' ' . \PHP_EOL;
 		return $this->write($message);
 	}
 
@@ -232,6 +233,41 @@ class Logger
 			$replace['{' . $key . '}'] = $value;
 		}
 		return \strtr($message, $replace);
+	}
+
+	protected function getLevelName(int $level) : string
+	{
+		if ($level === 7) {
+			return 'EMERGENCY';
+		}
+		if ($level === 6) {
+			return 'ALERT';
+		}
+		if ($level === 5) {
+			return 'CRITICAL';
+		}
+		if ($level === 4) {
+			return 'ERROR';
+		}
+		if ($level === 3) {
+			return 'WARNING';
+		}
+		if ($level === 2) {
+			return 'NOTICE';
+		}
+		if ($level === 1) {
+			return 'INFO';
+		}
+		if ($level === 0) {
+			return 'DEBUG';
+		}
+		throw new \InvalidArgumentException('Invalid level: ' . $level);
+	}
+
+	protected function sanitizeMessage(string $message) : string
+	{
+		$message = \trim($message);
+		return \strtr($message, [' ' . \PHP_EOL => \PHP_EOL]);
 	}
 
 	protected function write(string $message) : bool
