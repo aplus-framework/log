@@ -158,4 +158,13 @@ class LoggerTest extends TestCase
 			$this->getContents()
 		);
 	}
+
+	public function testContext()
+	{
+		$this->assertTrue($this->logger->debug('foo {a}bar', ['a' => 'x ']));
+		$this->assertEquals(
+			\date('H:i:s') . ' DEBUG foo x bar ' . \PHP_EOL,
+			$this->getContents()
+		);
+	}
 }
