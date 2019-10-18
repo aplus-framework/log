@@ -34,6 +34,24 @@ class LoggerTest extends TestCase
 		return \file_get_contents($this->directory . \date('Y-m-d') . '.log');
 	}
 
+	public function testInvalidDirectory()
+	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage(
+			'Invalid directory path: ' . __FILE__
+		);
+		(new Logger(__FILE__));
+	}
+
+	public function testInvalidLevel()
+	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage(
+			'Invalid level: ' . 10
+		);
+		(new Logger($this->directory, 10));
+	}
+
 	public function testLog()
 	{
 		$this->assertTrue($this->logger->log($this->logger::DEBUG, 'foo'));
@@ -111,6 +129,32 @@ class LoggerTest extends TestCase
 		$this->assertTrue($this->logger->debug('foo'));
 		$this->assertEquals(
 			$this->getExpected('DEBUG'),
+			$this->getContents()
+		);
+	}
+
+	public function testMultiLogs()
+	{
+		$this->assertTrue($this->logger->debug('foo'));
+		$this->assertTrue($this->logger->info('foo'));
+		$this->assertTrue($this->logger->emergency('foo'));
+		$this->assertEquals(
+			$this->getExpected('DEBUG')
+			. $this->getExpected('INFO')
+			. $this->getExpected('EMERGENCY'),
+			$this->getContents()
+		);
+	}
+
+	public function testMultiLogsOnDiabledLevel()
+	{
+		$this->logger = new Logger($this->directory, $this->logger::INFO);
+		$this->assertTrue($this->logger->debug('foo'));
+		$this->assertTrue($this->logger->info('foo'));
+		$this->assertTrue($this->logger->emergency('foo'));
+		$this->assertEquals(
+			$this->getExpected('INFO')
+			. $this->getExpected('EMERGENCY'),
 			$this->getContents()
 		);
 	}
