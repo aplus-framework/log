@@ -1,7 +1,7 @@
 {
 	"name": "natanfelles/log",
-	"type": "project",
-	"description": "The Framework Sample package",
+	"type": "library",
+	"description": "The Framework Log Library",
 	"keywords": [
 		"log",
 		"logger"
