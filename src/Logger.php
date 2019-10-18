@@ -16,7 +16,7 @@ class Logger
 	 */
 	public const ALERT = 6;
 	/**
-	 * CRITICAL level.
+	 * Critical level.
 	 */
 	public const CRITICAL = 5;
 	/**
@@ -61,7 +61,7 @@ class Logger
 	 * @throws \InvalidArgumentException if directory is invalid,
 	 *                                   if log level is invalid
 	 */
-	public function __construct(string $directory, int $level = 2)
+	public function __construct(string $directory, int $level = 0)
 	{
 		$directory = \realpath($directory);
 		if ( ! $directory || ! \is_dir($directory)) {
@@ -267,7 +267,13 @@ class Logger
 	protected function sanitizeMessage(string $message) : string
 	{
 		$message = \trim($message);
-		return \strtr($message, [' ' . \PHP_EOL => \PHP_EOL]);
+		$parts = \explode(\PHP_EOL, $message);
+		foreach ($parts as &$part) {
+			$part = \trim($part);
+		}
+		unset($part);
+		$message = \implode(\PHP_EOL, $parts);
+		return $message;
 	}
 
 	protected function write(string $message) : bool
