@@ -41,16 +41,12 @@ class Logger
 	public const DEBUG = 0;
 	/**
 	 * Logs directory path.
-	 *
-	 * @var string
 	 */
-	protected $directory;
+	protected string $directory;
 	/**
 	 * Active log level.
-	 *
-	 * @var int
 	 */
-	protected $level = 2;
+	protected int $level = Logger::NOTICE;
 
 	/**
 	 * Logger constructor.

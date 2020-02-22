@@ -1,22 +1,18 @@
 <?php namespace Tests\Log;
 
-use Framework\Log\Logger;
 use PHPUnit\Framework\TestCase;
 
 class LoggerTest extends TestCase
 {
-	/**
-	 * @var Logger
-	 */
-	protected $logger;
-	protected $directory = '/tmp/logger/';
+	protected LoggerMock $logger;
+	protected string $directory = '/tmp/logger/';
 
 	public function setup() : void
 	{
 		if ( ! \is_dir($this->directory)) {
 			\mkdir($this->directory);
 		}
-		$this->logger = new Logger($this->directory);
+		$this->logger = new LoggerMock($this->directory);
 	}
 
 	protected function tearDown() : void
@@ -40,7 +36,7 @@ class LoggerTest extends TestCase
 		$this->expectExceptionMessage(
 			'Invalid directory path: ' . __FILE__
 		);
-		(new Logger(__FILE__));
+		(new LoggerMock(__FILE__));
 	}
 
 	public function testInvalidLevel()
@@ -49,7 +45,14 @@ class LoggerTest extends TestCase
 		$this->expectExceptionMessage(
 			'Invalid level: ' . 10
 		);
-		(new Logger($this->directory, 10));
+		(new LoggerMock($this->directory, 10));
+	}
+
+	public function testInvalidName()
+	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid level: 8');
+		$this->logger->getLevelName(8);
 	}
 
 	public function testLog()
@@ -148,7 +151,7 @@ class LoggerTest extends TestCase
 
 	public function testMultiLogsOnDiabledLevel()
 	{
-		$this->logger = new Logger($this->directory, $this->logger::INFO);
+		$this->logger = new LoggerMock($this->directory, $this->logger::INFO);
 		$this->assertTrue($this->logger->debug('foo'));
 		$this->assertTrue($this->logger->info('foo'));
 		$this->assertTrue($this->logger->emergency('foo'));
