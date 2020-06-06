@@ -1,5 +1,7 @@
 <?php namespace Framework\Log;
 
+use InvalidArgumentException;
+
 /**
  * Class Logger.
  *
@@ -54,14 +56,14 @@ class Logger
 	 * @param string $directory
 	 * @param int    $level
 	 *
-	 * @throws \InvalidArgumentException if directory is invalid,
-	 *                                   if log level is invalid
+	 * @throws InvalidArgumentException if directory is invalid,
+	 *                                  if log level is invalid
 	 */
 	public function __construct(string $directory, int $level = 0)
 	{
 		$directory = \realpath($directory);
 		if ( ! $directory || ! \is_dir($directory)) {
-			throw new \InvalidArgumentException('Invalid directory path: ' . $directory);
+			throw new InvalidArgumentException('Invalid directory path: ' . $directory);
 		}
 		$this->validateLevel($level);
 		$this->directory = $directory . \DIRECTORY_SEPARATOR;
@@ -75,7 +77,7 @@ class Logger
 	 * @param string $message
 	 * @param array  $context
 	 *
-	 * @throws \InvalidArgumentException if log level is invalid
+	 * @throws InvalidArgumentException if log level is invalid
 	 *
 	 * @return bool
 	 */
@@ -218,7 +220,7 @@ class Logger
 			static::INFO,
 			static::DEBUG,
 		], true)) {
-			throw new \InvalidArgumentException('Invalid level: ' . $level);
+			throw new InvalidArgumentException('Invalid level: ' . $level);
 		}
 	}
 
@@ -233,31 +235,25 @@ class Logger
 
 	protected function getLevelName(int $level) : string
 	{
-		if ($level === 7) {
-			return 'EMERGENCY';
+		switch ($level) {
+			case 0:
+				return 'DEBUG';
+			case 1:
+				return 'INFO';
+			case 2:
+				return 'NOTICE';
+			case 3:
+				return 'WARNING';
+			case 4:
+				return 'ERROR';
+			case 5:
+				return 'CRITICAL';
+			case 6:
+				return 'ALERT';
+			case 7:
+				return 'EMERGENCY';
 		}
-		if ($level === 6) {
-			return 'ALERT';
-		}
-		if ($level === 5) {
-			return 'CRITICAL';
-		}
-		if ($level === 4) {
-			return 'ERROR';
-		}
-		if ($level === 3) {
-			return 'WARNING';
-		}
-		if ($level === 2) {
-			return 'NOTICE';
-		}
-		if ($level === 1) {
-			return 'INFO';
-		}
-		if ($level === 0) {
-			return 'DEBUG';
-		}
-		throw new \InvalidArgumentException('Invalid level: ' . $level);
+		throw new InvalidArgumentException('Invalid level: ' . $level);
 	}
 
 	protected function sanitizeMessage(string $message) : string
