@@ -59,7 +59,7 @@ class Logger
 	 * @throws InvalidArgumentException if directory is invalid,
 	 *                                  if log level is invalid
 	 */
-	public function __construct(string $directory, int $level = self::NOTICE)
+	public function __construct(string $directory, int $level = self::DEBUG)
 	{
 		$directory = \realpath($directory);
 		if ( ! $directory || ! \is_dir($directory)) {
