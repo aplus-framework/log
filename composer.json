@@ -25,6 +25,11 @@
 		"phpstan/phpstan": "^0.12",
 		"phpunit/phpunit": "^9.5"
 	},
+	"config": {
+		"optimize-autoloader": true,
+		"preferred-install": "dist",
+		"sort-packages": true
+	},
 	"autoload": {
 		"psr-4": {
 			"Framework\\Log\\": "src/"
@@ -37,11 +42,6 @@
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
-	"scripts": {
-		"post-update-cmd": [
-			"composer dump-autoload"
-		]
-	},
 	"support": {
 		"email": "natanfelles@gmail.com",
 		"issues": "https://gitlab.com/the-framework/libraries/log/issues",
