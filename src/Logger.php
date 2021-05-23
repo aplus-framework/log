@@ -236,21 +236,21 @@ class Logger
 	protected function getLevelName(int $level) : string
 	{
 		switch ($level) {
-			case 0:
+			case static::DEBUG:
 				return 'DEBUG';
-			case 1:
+			case static::INFO:
 				return 'INFO';
-			case 2:
+			case static::NOTICE:
 				return 'NOTICE';
-			case 3:
+			case static::WARNING:
 				return 'WARNING';
-			case 4:
+			case static::ERROR:
 				return 'ERROR';
-			case 5:
+			case static::CRITICAL:
 				return 'CRITICAL';
-			case 6:
+			case static::ALERT:
 				return 'ALERT';
-			case 7:
+			case static::EMERGENCY:
 				return 'EMERGENCY';
 		}
 		throw new InvalidArgumentException('Invalid level: ' . $level);
