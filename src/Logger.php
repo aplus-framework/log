@@ -272,7 +272,12 @@ class Logger
 	{
 		$file = $this->directory . \date('Y-m-d') . '.log';
 		$handle = \fopen($file, 'ab');
+		if ($handle === false) {
+			return false;
+		}
+		\flock($handle, \LOCK_EX);
 		$write = \fwrite($handle, $message);
+		\flock($handle, \LOCK_UN);
 		\fclose($handle);
 		return $write !== false;
 	}
