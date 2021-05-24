@@ -49,6 +49,15 @@ class Logger
 	 * Active log level.
 	 */
 	protected int $level = Logger::NOTICE;
+	protected array $lastLog = [
+		'filepath' => null,
+		'date' => null,
+		'time' => null,
+		'level' => null,
+		'id' => null,
+		'message' => null,
+		'written' => null,
+	];
 
 	/**
 	 * Logger constructor.
@@ -84,13 +93,44 @@ class Logger
 	public function log(int $level, string $message, array $context = []) : bool
 	{
 		$this->validateLevel($level);
+		$this->resetLastLog();
 		if ($level < $this->level) {
 			return true;
 		}
+		$time = \date('H:i:s');
+		$this->lastLog['time'] = $time;
+		$level = $this->getLevelName($level);
+		$this->lastLog['level'] = $level;
+		$id = \bin2hex(\random_bytes(10));
+		$this->lastLog['id'] = $id;
 		$message = $this->replaceContext($message, $context);
-		$message = \date('H:i:s') . ' ' . $this->getLevelName($level) . ' '
-			. $this->sanitizeMessage($message) . ' ' . \PHP_EOL;
+		$message = $this->sanitizeMessage($message);
+		$this->lastLog['message'] = $message;
+		$message = $time . ' ' . $level . ' ' . $id . ' ' . $message . ' ' . \PHP_EOL;
 		return $this->write($message);
+	}
+
+	/**
+	 * Get the last written log info.
+	 *
+	 * @return array An array with 7 keys: filepath, date, time, level, id, message and written
+	 */
+	public function getLastLog() : array
+	{
+		return $this->lastLog;
+	}
+
+	protected function resetLastLog()
+	{
+		$this->lastLog = [
+			'filepath' => null,
+			'date' => null,
+			'time' => null,
+			'level' => null,
+			'id' => null,
+			'message' => null,
+			'written' => null,
+		];
 	}
 
 	/**
@@ -270,15 +310,18 @@ class Logger
 
 	protected function write(string $message) : bool
 	{
-		$file = $this->directory . \date('Y-m-d') . '.log';
+		$date = \date('Y-m-d');
+		$this->lastLog['date'] = $date;
+		$file = $this->directory . $date . '.log';
+		$this->lastLog['filepath'] = $file;
 		$handle = \fopen($file, 'ab');
 		if ($handle === false) {
-			return false;
+			return $this->lastLog['written'] = false;
 		}
 		\flock($handle, \LOCK_EX);
 		$write = \fwrite($handle, $message);
 		\flock($handle, \LOCK_UN);
 		\fclose($handle);
-		return $write !== false;
+		return $this->lastLog['written'] = $write !== false;
 	}
 }

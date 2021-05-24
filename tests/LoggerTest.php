@@ -22,7 +22,7 @@ class LoggerTest extends TestCase
 
 	protected function getExpected(string $level)
 	{
-		return \date('H:i:s') . ' ' . $level . ' foo ' . \PHP_EOL;
+		return '#' . \date('H:i:s') . ' ' . $level . ' [a-z0-9]+' . ' foo ' . \PHP_EOL . '#';
 	}
 
 	protected function getContents() : string
@@ -58,7 +58,7 @@ class LoggerTest extends TestCase
 	public function testLog()
 	{
 		$this->assertTrue($this->logger->log($this->logger::DEBUG, 'foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('DEBUG'),
 			$this->getContents()
 		);
@@ -67,7 +67,7 @@ class LoggerTest extends TestCase
 	public function testEmergency()
 	{
 		$this->assertTrue($this->logger->emergency('foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('EMERGENCY'),
 			$this->getContents()
 		);
@@ -76,7 +76,7 @@ class LoggerTest extends TestCase
 	public function testAlert()
 	{
 		$this->assertTrue($this->logger->alert('foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('ALERT'),
 			$this->getContents()
 		);
@@ -85,7 +85,7 @@ class LoggerTest extends TestCase
 	public function testCritical()
 	{
 		$this->assertTrue($this->logger->critical('foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('CRITICAL'),
 			$this->getContents()
 		);
@@ -94,7 +94,7 @@ class LoggerTest extends TestCase
 	public function testError()
 	{
 		$this->assertTrue($this->logger->error('foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('ERROR'),
 			$this->getContents()
 		);
@@ -103,7 +103,7 @@ class LoggerTest extends TestCase
 	public function testWarning()
 	{
 		$this->assertTrue($this->logger->warning('foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('WARNING'),
 			$this->getContents()
 		);
@@ -112,7 +112,7 @@ class LoggerTest extends TestCase
 	public function testNotice()
 	{
 		$this->assertTrue($this->logger->notice('foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('NOTICE'),
 			$this->getContents()
 		);
@@ -121,7 +121,7 @@ class LoggerTest extends TestCase
 	public function testInfo()
 	{
 		$this->assertTrue($this->logger->info('foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('INFO'),
 			$this->getContents()
 		);
@@ -130,7 +130,7 @@ class LoggerTest extends TestCase
 	public function testDebug()
 	{
 		$this->assertTrue($this->logger->debug('foo'));
-		$this->assertEquals(
+		$this->assertMatchesRegularExpression(
 			$this->getExpected('DEBUG'),
 			$this->getContents()
 		);
@@ -141,10 +141,15 @@ class LoggerTest extends TestCase
 		$this->assertTrue($this->logger->debug('foo'));
 		$this->assertTrue($this->logger->info('foo'));
 		$this->assertTrue($this->logger->emergency('foo'));
-		$this->assertEquals(
-			$this->getExpected('DEBUG')
-			. $this->getExpected('INFO')
-			. $this->getExpected('EMERGENCY'),
+		$time = \date('H:i:s');
+		$this->assertMatchesRegularExpression(
+			<<<EOL
+#{$time} DEBUG [a-z0-9]+ foo 
+{$time} INFO [a-z0-9]+ foo 
+{$time} EMERGENCY [a-z0-9]+ foo 
+#
+EOL
+			,
 			$this->getContents()
 		);
 	}
@@ -155,9 +160,14 @@ class LoggerTest extends TestCase
 		$this->assertTrue($this->logger->debug('foo'));
 		$this->assertTrue($this->logger->info('foo'));
 		$this->assertTrue($this->logger->emergency('foo'));
-		$this->assertEquals(
-			$this->getExpected('INFO')
-			. $this->getExpected('EMERGENCY'),
+		$time = \date('H:i:s');
+		$this->assertMatchesRegularExpression(
+			<<<EOL
+#{$time} INFO [a-z0-9]+ foo 
+{$time} EMERGENCY [a-z0-9]+ foo 
+#
+EOL
+			,
 			$this->getContents()
 		);
 	}
@@ -165,9 +175,40 @@ class LoggerTest extends TestCase
 	public function testContext()
 	{
 		$this->assertTrue($this->logger->debug('foo {a}bar', ['a' => 'x ']));
-		$this->assertEquals(
-			\date('H:i:s') . ' DEBUG foo x bar ' . \PHP_EOL,
+		$this->assertMatchesRegularExpression(
+			'#' . \date('H:i:s') . ' DEBUG [a-z0-9]+ foo x bar ' . \PHP_EOL . '#',
 			$this->getContents()
 		);
+	}
+
+	public function testLastLog()
+	{
+		$this->assertTrue($this->logger->critical('foo'));
+		$log = [
+			'filepath' => $this->directory . \date('Y-m-d') . '.log',
+			'date' => \date('Y-m-d'),
+			'time' => \date('H:i:s'),
+			'level' => 'CRITICAL',
+			'message' => 'foo',
+			'written' => true,
+		];
+		$last_log = $this->logger->getLastLog();
+		unset($last_log['id']);
+		$this->assertEquals($log, $last_log);
+	}
+
+	public function testLastLogOnDisabledLevel()
+	{
+		$this->logger = new LoggerMock($this->directory, $this->logger::INFO);
+		$this->logger->debug('foo');
+		$this->assertEquals([
+			'filepath' => null,
+			'date' => null,
+			'time' => null,
+			'level' => null,
+			'id' => null,
+			'message' => null,
+			'written' => null,
+		], $this->logger->getLastLog());
 	}
 }
