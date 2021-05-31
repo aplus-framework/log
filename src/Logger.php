@@ -328,4 +328,36 @@ class Logger
 		}
 		return $this->lastLog['written'] = $write !== false;
 	}
+
+	/**
+	 * Flush log files.
+	 *
+	 * @param int|null $before Flush files before timestamp
+	 *
+	 * @return false|int The number of deleted files or false on failure
+	 */
+	public function flush(int $before = null) : int | false
+	{
+		if ($before !== null) {
+			$before = \date('Y-m-d', $before);
+		}
+		$deleted_count = 0;
+		$handle = @\opendir($this->directory);
+		if ($handle === false) {
+			return false;
+		}
+		while (($path = \readdir($handle)) !== false) {
+			$filename = $this->directory . $path;
+			if ($path[0] === '.' || ! \is_file($filename)) {
+				continue;
+			}
+			if ($path < $before
+				&& \str_ends_with($path, '.log')
+				&& \unlink($filename)
+			) {
+				++$deleted_count;
+			}
+		}
+		return $deleted_count;
+	}
 }

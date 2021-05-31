@@ -17,7 +17,9 @@ class LoggerTest extends TestCase
 
 	protected function tearDown() : void
 	{
-		\shell_exec('rm -r ' . $this->directory);
+		if (\is_dir($this->directory)) {
+			\shell_exec('rm -r ' . $this->directory);
+		}
 	}
 
 	protected function getExpected(string $level)
@@ -210,5 +212,26 @@ EOL
 			'message' => null,
 			'written' => null,
 		], $this->logger->getLastLog());
+	}
+
+	public function testFlush()
+	{
+		\mkdir($this->directory . 'subdir');
+		\touch($this->directory . '.hidden');
+		\touch($this->directory . 'other.txt');
+		$this->assertEquals(0, $this->logger->flush());
+		$day = 60 * 60 * 24;
+		\touch($this->directory . \date('Y-m-d') . '.log');
+		\touch($this->directory . \date('Y-m-d', \time() - $day) . '.log');
+		\touch($this->directory . \date('Y-m-d', \time() - 2 * $day) . '.log');
+		$this->assertEquals(0, $this->logger->flush());
+		$this->assertEquals(1, $this->logger->flush(\time() - $day));
+		$this->assertEquals(2, $this->logger->flush(\time() + $day));
+	}
+
+	public function testFlushFailure()
+	{
+		\rmdir($this->directory);
+		$this->assertFalse($this->logger->flush());
 	}
 }
