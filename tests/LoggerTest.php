@@ -18,7 +18,7 @@ class LoggerTest extends TestCase
 	protected function tearDown() : void
 	{
 		if (\is_dir($this->directory)) {
-			\shell_exec('rm -r ' . $this->directory);
+			\shell_exec('rm -rf ' . $this->directory);
 		}
 	}
 
@@ -233,5 +233,12 @@ EOL
 	{
 		\rmdir($this->directory);
 		$this->assertFalse($this->logger->flush());
+	}
+
+	public function testWriteFailure()
+	{
+		$this->assertTrue($this->logger->critical('foo'));
+		\chmod($this->directory . \date('Y-m-d') . '.log', 0444);
+		$this->assertFalse($this->logger->critical('foo'));
 	}
 }

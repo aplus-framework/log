@@ -315,7 +315,7 @@ class Logger
 		$file = $this->directory . $date . '.log';
 		$this->lastLog['filepath'] = $file;
 		$is_file = \is_file($file);
-		$handle = \fopen($file, 'ab');
+		$handle = @\fopen($file, 'ab');
 		if ($handle === false) {
 			return $this->lastLog['written'] = false;
 		}
