@@ -314,6 +314,7 @@ class Logger
 		$this->lastLog['date'] = $date;
 		$file = $this->directory . $date . '.log';
 		$this->lastLog['filepath'] = $file;
+		$is_file = \is_file($file);
 		$handle = \fopen($file, 'ab');
 		if ($handle === false) {
 			return $this->lastLog['written'] = false;
@@ -322,6 +323,9 @@ class Logger
 		$write = \fwrite($handle, $message);
 		\flock($handle, \LOCK_UN);
 		\fclose($handle);
+		if ($is_file === false) {
+			\chmod($file, 0644);
+		}
 		return $this->lastLog['written'] = $write !== false;
 	}
 }
