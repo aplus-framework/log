@@ -205,6 +205,29 @@ class LoggerTest extends TestCase
 		$this->assertNull($this->logger->getLastLog());
 	}
 
+	public function testGetLogs()
+	{
+		$date = \date('Y-m-d');
+		$time = \date('H:i:s');
+		$this->assertSame([], $this->logger->getLogs($date));
+		$this->logger->debug('debug ');
+		$this->logger->critical(" critical\n\n\n\t oh, my... ");
+		$logs = $this->logger->getLogs($date);
+		$this->assertCount(2, $logs);
+		$this->assertSame($this->directory . $date . '.log', $logs[0]->filename);
+		$this->assertSame($date, $logs[0]->date);
+		$this->assertSame($time, $logs[0]->time);
+		$this->assertSame('DEBUG', $logs[0]->levelName);
+		$this->assertSame('debug', $logs[0]->message);
+		$this->assertTrue($logs[0]->written);
+		$this->assertSame($this->directory . $date . '.log', $logs[1]->filename);
+		$this->assertSame($date, $logs[1]->date);
+		$this->assertSame($time, $logs[1]->time);
+		$this->assertSame('CRITICAL', $logs[1]->levelName);
+		$this->assertSame("critical\noh, my...", $logs[1]->message);
+		$this->assertTrue($logs[1]->written);
+	}
+
 	public function testFlush()
 	{
 		\mkdir($this->directory . 'subdir');

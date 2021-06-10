@@ -109,6 +109,30 @@ class Logger
 	}
 
 	/**
+	 * Get logs by date.
+	 *
+	 * @param string $date The date in the format `Y-m-d`
+	 *
+	 * @return array|Log[]
+	 */
+	public function getLogs(string $date) : array
+	{
+		$file = $this->directory . $date . '.log';
+		if ( ! \is_file($file)) {
+			return [];
+		}
+		$contents = (string) \file_get_contents($file);
+		$contents = \explode(\PHP_EOL . \PHP_EOL, $contents);
+		$logs = [];
+		foreach ($contents as $log) {
+			if ($log !== '') {
+				$logs[] = new Log($file, $log, true);
+			}
+		}
+		return $logs;
+	}
+
+	/**
 	 * Detailed debug information.
 	 *
 	 * @param string $message
