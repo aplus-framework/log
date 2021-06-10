@@ -99,9 +99,9 @@ class Logger
 	}
 
 	/**
-	 * Get the last written log.
+	 * Get the last accepted log in the current instance.
 	 *
-	 * @return Log|null
+	 * @return Log|null The last Log or null if the last was not accepted
 	 */
 	public function getLastLog() : ?Log
 	{
