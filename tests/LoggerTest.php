@@ -210,14 +210,14 @@ class LoggerTest extends TestCase
 		\mkdir($this->directory . 'subdir');
 		\touch($this->directory . '.hidden');
 		\touch($this->directory . 'other.txt');
-		$this->assertEquals(0, $this->logger->flush());
+		$this->assertSame(0, $this->logger->flush());
 		$day = 60 * 60 * 24;
 		\touch($this->directory . \date('Y-m-d') . '.log');
 		\touch($this->directory . \date('Y-m-d', \time() - $day) . '.log');
 		\touch($this->directory . \date('Y-m-d', \time() - 2 * $day) . '.log');
-		$this->assertEquals(0, $this->logger->flush());
-		$this->assertEquals(1, $this->logger->flush(\time() - $day));
-		$this->assertEquals(2, $this->logger->flush(\time() + $day));
+		$this->assertSame(0, $this->logger->flush());
+		$this->assertSame(1, $this->logger->flush(\time() - $day));
+		$this->assertSame(2, $this->logger->flush(\time() + $day));
 	}
 
 	public function testFlushFailure()
