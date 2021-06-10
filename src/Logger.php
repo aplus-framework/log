@@ -295,7 +295,7 @@ class Logger
 			return false;
 		}
 		\flock($handle, \LOCK_EX);
-		$written = \fwrite($handle, $message . ' ' . \PHP_EOL);
+		$written = \fwrite($handle, $message . \PHP_EOL . \PHP_EOL);
 		\flock($handle, \LOCK_UN);
 		\fclose($handle);
 		if ($is_file === false) {

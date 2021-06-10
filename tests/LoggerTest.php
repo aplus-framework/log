@@ -24,7 +24,7 @@ class LoggerTest extends TestCase
 
 	protected function getExpected(string $level)
 	{
-		return '#' . \date('H:i:s') . ' ' . $level . ' [a-z0-9]+' . ' foo ' . \PHP_EOL . '#';
+		return '#' . \date('H:i:s') . ' ' . $level . ' [a-z0-9]+' . ' foo' . \PHP_EOL . \PHP_EOL . '#';
 	}
 
 	protected function getContents() : string
@@ -146,12 +146,14 @@ class LoggerTest extends TestCase
 		$time = \date('H:i:s');
 		$this->assertMatchesRegularExpression(
 			<<<EOL
-#{$time} DEBUG [a-z0-9]+ foo 
-{$time} INFO [a-z0-9]+ foo 
-{$time} EMERGENCY [a-z0-9]+ foo 
-#
-EOL
-			,
+			#{$time} DEBUG [a-z0-9]+ foo
+			
+			{$time} INFO [a-z0-9]+ foo
+			
+			{$time} EMERGENCY [a-z0-9]+ foo
+			
+			#
+			EOL,
 			$this->getContents()
 		);
 	}
@@ -165,11 +167,12 @@ EOL
 		$time = \date('H:i:s');
 		$this->assertMatchesRegularExpression(
 			<<<EOL
-#{$time} INFO [a-z0-9]+ foo 
-{$time} EMERGENCY [a-z0-9]+ foo 
-#
-EOL
-			,
+			#{$time} INFO [a-z0-9]+ foo
+			
+			{$time} EMERGENCY [a-z0-9]+ foo
+			
+			#
+			EOL,
 			$this->getContents()
 		);
 	}
@@ -178,7 +181,7 @@ EOL
 	{
 		$this->assertTrue($this->logger->debug('foo {a}bar', ['a' => 'x ']));
 		$this->assertMatchesRegularExpression(
-			'#' . \date('H:i:s') . ' DEBUG [a-z0-9]+ foo x bar ' . \PHP_EOL . '#',
+			'#' . \date('H:i:s') . ' DEBUG [a-z0-9]+ foo x bar' . \PHP_EOL . \PHP_EOL . '#',
 			$this->getContents()
 		);
 	}
