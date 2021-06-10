@@ -185,33 +185,21 @@ EOL
 
 	public function testLastLog()
 	{
-		$this->assertTrue($this->logger->critical('foo'));
-		$log = [
-			'filepath' => $this->directory . \date('Y-m-d') . '.log',
-			'date' => \date('Y-m-d'),
-			'time' => \date('H:i:s'),
-			'level' => 'CRITICAL',
-			'message' => 'foo',
-			'written' => true,
-		];
-		$last_log = $this->logger->getLastLog();
-		unset($last_log['id']);
-		$this->assertEquals($log, $last_log);
+		$this->assertTrue($this->logger->critical('foo bar'));
+		$log = $this->logger->getLastLog();
+		$this->assertSame($this->directory . \date('Y-m-d') . '.log', $log->filename);
+		$this->assertSame(\date('Y-m-d'), $log->date);
+		$this->assertSame(\date('H:i:s'), $log->time);
+		$this->assertSame('CRITICAL', $log->levelName);
+		$this->assertSame('foo bar', $log->message);
+		$this->assertTrue($log->written);
 	}
 
 	public function testLastLogOnDisabledLevel()
 	{
 		$this->logger = new LoggerMock($this->directory, $this->logger::INFO);
 		$this->logger->debug('foo');
-		$this->assertEquals([
-			'filepath' => null,
-			'date' => null,
-			'time' => null,
-			'level' => null,
-			'id' => null,
-			'message' => null,
-			'written' => null,
-		], $this->logger->getLastLog());
+		$this->assertNull($this->logger->getLastLog());
 	}
 
 	public function testFlush()

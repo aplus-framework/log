@@ -49,15 +49,7 @@ class Logger
 	 * Active log level.
 	 */
 	protected int $level = Logger::NOTICE;
-	protected array $lastLog = [
-		'filepath' => null,
-		'date' => null,
-		'time' => null,
-		'level' => null,
-		'id' => null,
-		'message' => null,
-		'written' => null,
-	];
+	protected Log | null $lastLog = null;
 
 	/**
 	 * Logger constructor.
@@ -93,44 +85,27 @@ class Logger
 	public function log(int $level, string $message, array $context = []) : bool
 	{
 		$this->validateLevel($level);
-		$this->resetLastLog();
+		$this->lastLog = null;
 		if ($level < $this->level) {
 			return true;
 		}
 		$time = \date('H:i:s');
-		$this->lastLog['time'] = $time;
 		$level = $this->getLevelName($level);
-		$this->lastLog['level'] = $level;
 		$id = \bin2hex(\random_bytes(10));
-		$this->lastLog['id'] = $id;
 		$message = $this->replaceContext($message, $context);
 		$message = $this->sanitizeMessage($message);
-		$this->lastLog['message'] = $message;
-		$message = $time . ' ' . $level . ' ' . $id . ' ' . $message . ' ' . \PHP_EOL;
+		$message = $time . ' ' . $level . ' ' . $id . ' ' . $message;
 		return $this->write($message);
 	}
 
 	/**
-	 * Get the last written log info.
+	 * Get the last written log.
 	 *
-	 * @return array An array with 7 keys: filepath, date, time, level, id, message and written
+	 * @return Log|null
 	 */
-	public function getLastLog() : array
+	public function getLastLog() : ?Log
 	{
 		return $this->lastLog;
-	}
-
-	protected function resetLastLog()
-	{
-		$this->lastLog = [
-			'filepath' => null,
-			'date' => null,
-			'time' => null,
-			'level' => null,
-			'id' => null,
-			'message' => null,
-			'written' => null,
-		];
 	}
 
 	/**
@@ -311,22 +286,23 @@ class Logger
 	protected function write(string $message) : bool
 	{
 		$date = \date('Y-m-d');
-		$this->lastLog['date'] = $date;
 		$file = $this->directory . $date . '.log';
-		$this->lastLog['filepath'] = $file;
 		$is_file = \is_file($file);
 		$handle = @\fopen($file, 'ab');
 		if ($handle === false) {
-			return $this->lastLog['written'] = false;
+			$this->lastLog = new Log($file, $message, false);
+			return false;
 		}
 		\flock($handle, \LOCK_EX);
-		$write = \fwrite($handle, $message);
+		$written = \fwrite($handle, $message . ' ' . \PHP_EOL);
 		\flock($handle, \LOCK_UN);
 		\fclose($handle);
 		if ($is_file === false) {
 			\chmod($file, 0644);
 		}
-		return $this->lastLog['written'] = $write !== false;
+		$written = $written !== false;
+		$this->lastLog = new Log($file, $message, $written);
+		return $written;
 	}
 
 	/**
@@ -341,11 +317,11 @@ class Logger
 		if ($before !== null) {
 			$before = \date('Y-m-d', $before);
 		}
-		$deleted_count = 0;
 		$handle = @\opendir($this->directory);
 		if ($handle === false) {
 			return false;
 		}
+		$deleted_count = 0;
 		while (($path = \readdir($handle)) !== false) {
 			$filename = $this->directory . $path;
 			if ($path[0] === '.' || ! \is_file($filename)) {
