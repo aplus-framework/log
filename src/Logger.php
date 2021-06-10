@@ -241,11 +241,7 @@ class Logger
 
 	protected function replaceContext(string $message, array $context) : string
 	{
-		$replace = [];
-		foreach ($context as $key => $value) {
-			$replace['{' . $key . '}'] = $value;
-		}
-		return \strtr($message, $replace);
+		return \strtr($message, $context);
 	}
 
 	protected function getLevelName(int $level) : string

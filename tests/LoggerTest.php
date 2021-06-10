@@ -179,7 +179,7 @@ class LoggerTest extends TestCase
 
 	public function testContext()
 	{
-		$this->assertTrue($this->logger->debug('foo {a}bar', ['a' => 'x ']));
+		$this->assertTrue($this->logger->debug('foo {a}bar', ['{a}' => 'x ']));
 		$this->assertMatchesRegularExpression(
 			'#' . \date('H:i:s') . ' DEBUG [a-z0-9]+ foo x bar' . \PHP_EOL . \PHP_EOL . '#',
 			$this->getContents()
