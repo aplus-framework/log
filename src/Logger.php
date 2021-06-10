@@ -273,14 +273,15 @@ class Logger
 
 	protected function sanitizeMessage(string $message) : string
 	{
-		$message = \trim($message);
-		$parts = \explode(\PHP_EOL, $message);
-		foreach ($parts as &$part) {
-			$part = \trim($part);
+		$message = \explode(\PHP_EOL, $message);
+		$lines = [];
+		foreach ($message as $line) {
+			$line = \trim($line);
+			if ($line !== '') {
+				$lines[] = $line;
+			}
 		}
-		unset($part);
-		$message = \implode(\PHP_EOL, $parts);
-		return $message;
+		return \implode(\PHP_EOL, $lines);
 	}
 
 	protected function write(string $message) : bool

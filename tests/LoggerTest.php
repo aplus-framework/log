@@ -229,4 +229,13 @@ EOL
 		\chmod($this->directory . \date('Y-m-d') . '.log', 0444);
 		$this->assertFalse($this->logger->critical('foo'));
 	}
+
+	public function testSanitizeMessage()
+	{
+		$this->assertSame('abc', $this->logger->sanitizeMessage(' abc  '));
+		$this->assertSame(
+			"1\n2\n3",
+			$this->logger->sanitizeMessage("\n\t1\n 2\n\n 3 \t\n")
+		);
+	}
 }

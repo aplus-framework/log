@@ -8,4 +8,9 @@ class LoggerMock extends Logger
 	{
 		return parent::getLevelName($level);
 	}
+
+	public function sanitizeMessage(string $message) : string
+	{
+		return parent::sanitizeMessage($message);
+	}
 }
