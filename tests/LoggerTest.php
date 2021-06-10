@@ -181,7 +181,17 @@ class LoggerTest extends TestCase
 	{
 		$this->assertTrue($this->logger->debug('foo {a}bar', ['{a}' => 'x ']));
 		$this->assertMatchesRegularExpression(
-			'#' . \date('H:i:s') . ' DEBUG [a-z0-9]+ foo x bar' . \PHP_EOL . \PHP_EOL . '#',
+			'#' . \date('H:i:s') . ' DEBUG [a-z0-9]{12}+ foo x bar' . \PHP_EOL . \PHP_EOL . '#',
+			$this->getContents()
+		);
+	}
+
+	public function testIdSize()
+	{
+		$this->assertTrue($this->logger->debug('foo'));
+		$size = 12;
+		$this->assertMatchesRegularExpression(
+			'#' . \date('H:i:s') . ' DEBUG [a-z0-9]{' . $size . '}+ foo' . \PHP_EOL . \PHP_EOL . '#',
 			$this->getContents()
 		);
 	}

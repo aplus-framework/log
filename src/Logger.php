@@ -91,7 +91,7 @@ class Logger
 		}
 		$time = \date('H:i:s');
 		$level = $this->getLevelName($level);
-		$id = \bin2hex(\random_bytes(10));
+		$id = \bin2hex(\random_bytes(6));
 		$message = $this->replaceContext($message, $context);
 		$message = $this->sanitizeMessage($message);
 		$message = $time . ' ' . $level . ' ' . $id . ' ' . $message;
