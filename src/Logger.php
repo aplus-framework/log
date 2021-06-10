@@ -111,11 +111,22 @@ class Logger
 	/**
 	 * Get logs by date.
 	 *
-	 * @param string $date The date in the format `Y-m-d`
+	 * @param string   $date   The date in the format `Y-m-d`
+	 * @param int      $offset If offset is non-negative, the sequence will
+	 *                         start at that offset in the array. If
+	 *                         offset is negative, the sequence will
+	 *                         start that far from the end of the array.
+	 * @param int|null $length If length is given and is positive, then
+	 *                         the sequence will have that many elements in it. If
+	 *                         length is given and is negative then the
+	 *                         sequence will stop that many elements from the end of the
+	 *                         array. If it is omitted, then the sequence will have everything
+	 *                         from offset up until the end of the
+	 *                         array.
 	 *
 	 * @return array|Log[]
 	 */
-	public function getLogs(string $date) : array
+	public function getLogs(string $date, int $offset = 0, int $length = null) : array
 	{
 		$file = $this->directory . $date . '.log';
 		if ( ! \is_file($file)) {
@@ -123,11 +134,15 @@ class Logger
 		}
 		$contents = (string) \file_get_contents($file);
 		$contents = \explode(\PHP_EOL . \PHP_EOL, $contents);
+		if ($contents && $contents[\array_key_last($contents)] === '') {
+			\array_pop($contents);
+		}
+		if ($contents && ($offset || $length)) {
+			$contents = \array_slice($contents, $offset, $length);
+		}
 		$logs = [];
 		foreach ($contents as $log) {
-			if ($log !== '') {
-				$logs[] = new Log($file, $log, true);
-			}
+			$logs[] = new Log($file, $log, true);
 		}
 		return $logs;
 	}

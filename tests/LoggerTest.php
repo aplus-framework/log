@@ -228,6 +228,41 @@ class LoggerTest extends TestCase
 		$this->assertTrue($logs[1]->written);
 	}
 
+	public function testGetLogsWithSlice()
+	{
+		$this->logger->critical('0');
+		$this->logger->critical('1');
+		$this->logger->critical('2');
+		$this->logger->critical('3');
+		$this->logger->critical('4');
+		$this->logger->critical('5');
+		$date = \date('Y-m-d');
+		$logs = $this->logger->getLogs($date);
+		$this->assertCount(6, $logs);
+		$this->assertSame('0', $logs[0]->message);
+		$this->assertSame('5', $logs[\array_key_last($logs)]->message);
+		$logs = $this->logger->getLogs($date, 2);
+		$this->assertCount(4, $logs);
+		$this->assertSame('2', $logs[0]->message);
+		$this->assertSame('5', $logs[\array_key_last($logs)]->message);
+		$logs = $this->logger->getLogs($date, -2);
+		$this->assertCount(2, $logs);
+		$this->assertSame('4', $logs[0]->message);
+		$this->assertSame('5', $logs[\array_key_last($logs)]->message);
+		$logs = $this->logger->getLogs($date, 2, 2);
+		$this->assertCount(2, $logs);
+		$this->assertSame('2', $logs[0]->message);
+		$this->assertSame('3', $logs[\array_key_last($logs)]->message);
+		$logs = $this->logger->getLogs($date, 2, -3);
+		$this->assertCount(1, $logs);
+		$this->assertSame('2', $logs[0]->message);
+		$this->assertSame('2', $logs[\array_key_last($logs)]->message);
+		$logs = $this->logger->getLogs($date, 4, 2);
+		$this->assertCount(2, $logs);
+		$this->assertSame('4', $logs[0]->message);
+		$this->assertSame('5', $logs[\array_key_last($logs)]->message);
+	}
+
 	public function testFlush()
 	{
 		\mkdir($this->directory . 'subdir');
