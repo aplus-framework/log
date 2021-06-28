@@ -9,6 +9,8 @@
  */
 namespace Framework\Log;
 
+use Error;
+
 /**
  * Class Log.
  *
@@ -43,7 +45,7 @@ class Log implements \Stringable
 		if (\property_exists($this, $name)) {
 			return $this->{$name};
 		}
-		throw new \Error(
+		throw new Error(
 			'Undefined property: ' . static::class . '::$' . $name
 		);
 	}
