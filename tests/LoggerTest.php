@@ -38,6 +38,7 @@ final class LoggerTest extends TestCase
 
 	protected function getContents() : string
 	{
+		// @phpstan-ignore-next-line
 		return \file_get_contents($this->directory . \date('Y-m-d') . '.log');
 	}
 

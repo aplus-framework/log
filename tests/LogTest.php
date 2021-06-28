@@ -42,7 +42,7 @@ final class LogTest extends TestCase
 		$this->expectExceptionMessage(
 			'Undefined property: Framework\Log\Log::$foo'
 		);
-		$this->log->foo;
+		$this->log->foo; // @phpstan-ignore-line
 	}
 
 	public function testToString() : void
