@@ -10,6 +10,7 @@
 namespace Framework\Log;
 
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class Logger.
@@ -112,6 +113,7 @@ class Logger
 	 *
 	 * @return Log|null The last Log or null if the last was not accepted
 	 */
+	#[Pure]
 	public function getLastLog() : ?Log
 	{
 		return $this->lastLog;
@@ -287,6 +289,7 @@ class Logger
 		}
 	}
 
+	#[Pure]
 	protected function replaceContext(string $message, array $context) : string
 	{
 		return \strtr($message, $context);
@@ -315,6 +318,7 @@ class Logger
 		throw new InvalidArgumentException('Invalid level: ' . $level);
 	}
 
+	#[Pure]
 	protected function sanitizeMessage(string $message) : string
 	{
 		$message = \explode(\PHP_EOL, $message);
