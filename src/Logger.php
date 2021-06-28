@@ -9,6 +9,7 @@
  */
 namespace Framework\Log;
 
+use Exception;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 
@@ -65,10 +66,10 @@ class Logger
 	 * Logger constructor.
 	 *
 	 * @param string $directory
-	 * @param int    $level
+	 * @param int $level
 	 *
-	 * @throws InvalidArgumentException if directory is invalid,
-	 *                                  if log level is invalid
+	 * @throws InvalidArgumentException if directory is invalid or the log level
+	 * is invalid
 	 */
 	public function __construct(string $directory, int $level = self::DEBUG)
 	{
@@ -84,10 +85,11 @@ class Logger
 	/**
 	 * Logs with an arbitrary level.
 	 *
-	 * @param int    $level
+	 * @param int $level
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
+	 * @throws Exception if random_bytes cannot gather sufficient entropy
 	 * @throws InvalidArgumentException if log level is invalid
 	 *
 	 * @return bool
@@ -122,20 +124,17 @@ class Logger
 	/**
 	 * Get logs by date.
 	 *
-	 * @param string   $date   The date in the format `Y-m-d`
-	 * @param int      $offset If offset is non-negative, the sequence will
-	 *                         start at that offset in the array. If
-	 *                         offset is negative, the sequence will
-	 *                         start that far from the end of the array.
-	 * @param int|null $length If length is given and is positive, then
-	 *                         the sequence will have that many elements in it. If
-	 *                         length is given and is negative then the
-	 *                         sequence will stop that many elements from the end of the
-	 *                         array. If it is omitted, then the sequence will have everything
-	 *                         from offset up until the end of the
-	 *                         array.
+	 * @param string $date The date in the format `Y-m-d`
+	 * @param int $offset If offset is non-negative, the sequence will start at
+	 * that offset in the array. If offset is negative, the sequence will start
+	 * that far from the end of the array.
+	 * @param int|null $length If length is given and is positive, then the
+	 * sequence will have that many elements in it. If length is given and is
+	 * negative then the sequence will stop that many elements from the end of
+	 * the array. If it is omitted, then the sequence will have everything from
+	 * offset up until the end of the array.
 	 *
-	 * @return array|Log[]
+	 * @return array<int,Log>
 	 */
 	public function getLogs(string $date, int $offset = 0, int $length = null) : array
 	{
@@ -162,7 +161,7 @@ class Logger
 	 * Detailed debug information.
 	 *
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
 	 * @return bool
 	 */
@@ -177,7 +176,7 @@ class Logger
 	 * Example: User logs in, SQL logs.
 	 *
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
 	 * @return bool
 	 */
@@ -190,7 +189,7 @@ class Logger
 	 * Normal but significant events.
 	 *
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
 	 * @return bool
 	 */
@@ -206,7 +205,7 @@ class Logger
 	 * that are not necessarily wrong.
 	 *
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
 	 * @return bool
 	 */
@@ -220,7 +219,7 @@ class Logger
 	 * be logged and monitored.
 	 *
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
 	 * @return bool
 	 */
@@ -235,7 +234,7 @@ class Logger
 	 * Example: Application component unavailable, unexpected exception.
 	 *
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
 	 * @return bool
 	 */
@@ -251,7 +250,7 @@ class Logger
 	 * trigger the SMS alerts and wake you up.
 	 *
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
 	 * @return bool
 	 */
@@ -264,7 +263,7 @@ class Logger
 	 * System is unusable.
 	 *
 	 * @param string $message
-	 * @param array  $context
+	 * @param array<int|string,string> $context
 	 *
 	 * @return bool
 	 */
@@ -289,6 +288,12 @@ class Logger
 		}
 	}
 
+	/**
+	 * @param string $message
+	 * @param array<int|string,string> $context
+	 *
+	 * @return string
+	 */
 	#[Pure]
 	protected function replaceContext(string $message, array $context) : string
 	{
