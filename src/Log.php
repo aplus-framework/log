@@ -20,7 +20,7 @@ namespace Framework\Log;
  * @property-read string $message
  * @property-read bool   $written
  */
-class Log
+class Log implements \Stringable
 {
 	protected string $filename;
 	protected string $date;
