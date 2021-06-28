@@ -38,7 +38,7 @@ class Log implements \Stringable
 		$this->written = $written;
 	}
 
-	public function __get(string $name)
+	public function __get(string $name) : mixed
 	{
 		if (\property_exists($this, $name)) {
 			return $this->{$name};
