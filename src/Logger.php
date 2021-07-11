@@ -143,8 +143,8 @@ class Logger
 			return [];
 		}
 		$contents = (string) \file_get_contents($file);
-		$contents = \explode(\PHP_EOL . \PHP_EOL, $contents);
-		if ($contents && $contents[\array_key_last($contents)] === '') {
+		$contents = \explode(\PHP_EOL . \PHP_EOL, $contents); // @phpstan-ignore-line
+		if ($contents && $contents[\array_key_last($contents)] === '') { // @phpstan-ignore-line
 			\array_pop($contents);
 		}
 		if ($contents && ($offset || $length)) {
