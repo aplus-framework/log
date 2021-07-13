@@ -1,12 +1,12 @@
 {
-    "name": "natanfelles/log",
+    "name": "aplus/log",
     "type": "library",
-    "description": "The Framework Log Library",
+    "description": "Aplus Framework Log Library",
     "keywords": [
         "log",
         "logger"
     ],
-    "homepage": "https://the-framework.gitlab.io/libraries/log.html",
+    "homepage": "https://aplus-framework.com/docs/log",
     "license": "MIT",
     "authors": [
         {
@@ -46,9 +46,9 @@
     "prefer-stable": true,
     "support": {
         "email": "natanfelles@gmail.com",
-        "issues": "https://gitlab.com/the-framework/libraries/log/issues",
-        "wiki": "https://gitlab.com/the-framework/libraries/log/wikis/home",
-        "source": "https://gitlab.com/the-framework/libraries/log",
-        "docs": "https://the-framework.gitlab.io/libraries/log/docs/"
+        "issues": "https://gitlab.com/aplus-framework/libraries/log/issues",
+        "wiki": "https://gitlab.com/aplus-framework/libraries/log/wikis/home",
+        "source": "https://gitlab.com/aplus-framework/libraries/log",
+        "docs": "https://aplus-framework.gitlab.io/libraries/log/docs/"
     }
 }
