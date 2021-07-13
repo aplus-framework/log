@@ -1,4 +1,4 @@
-# The Framework Log Library
+# Aplus Framework Log Library
 
 - [Homepage](https://the-framework.gitlab.io/libraries/log.html)
 - [API Documentation](https://the-framework.gitlab.io/libraries/log/docs/)
