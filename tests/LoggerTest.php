@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of The Framework Log Library.
+ * This file is part of Aplus Framework Log Library.
  *
  * (c) Natan Felles <natanfelles@gmail.com>
  *
