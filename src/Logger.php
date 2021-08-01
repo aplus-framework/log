@@ -341,7 +341,7 @@ class Logger
     {
         $date = \date('Y-m-d');
         $file = $this->directory . $date . '.log';
-        $is_file = \is_file($file);
+        $isFile = \is_file($file);
         $handle = @\fopen($file, 'ab');
         if ($handle === false) {
             $this->lastLog = new Log($file, $message, false);
@@ -351,7 +351,7 @@ class Logger
         $written = \fwrite($handle, $message . \PHP_EOL . \PHP_EOL);
         \flock($handle, \LOCK_UN);
         \fclose($handle);
-        if ($is_file === false) {
+        if ($isFile === false) {
             \chmod($file, 0644);
         }
         $written = $written !== false;
@@ -375,7 +375,7 @@ class Logger
         if ($handle === false) {
             return false;
         }
-        $deleted_count = 0;
+        $deletedCount = 0;
         while (($path = \readdir($handle)) !== false) {
             $filename = $this->directory . $path;
             if ($path[0] === '.' || ! \is_file($filename)) {
@@ -385,9 +385,9 @@ class Logger
                 && \str_ends_with($path, '.log')
                 && \unlink($filename)
             ) {
-                ++$deleted_count;
+                ++$deletedCount;
             }
         }
-        return $deleted_count;
+        return $deletedCount;
     }
 }
