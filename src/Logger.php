@@ -17,6 +17,8 @@ use JetBrains\PhpStorm\Pure;
  * Class Logger.
  *
  * @see https://www.php-fig.org/psr/psr-3/
+ *
+ * @package log
  */
 class Logger
 {

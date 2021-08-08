@@ -21,6 +21,8 @@ use Error;
  * @property-read string $id
  * @property-read string $message
  * @property-read bool   $written
+ *
+ * @package log
  */
 class Log implements \Stringable
 {
