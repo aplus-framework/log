@@ -6,7 +6,7 @@
         "log",
         "logger"
     ],
-    "homepage": "https://aplus-framework.com/docs/log",
+    "homepage": "https://docs.aplus-framework.com/guides/libraries/log/",
     "license": "MIT",
     "authors": [
         {
@@ -49,6 +49,6 @@
         "issues": "https://gitlab.com/aplus-framework/libraries/log/issues",
         "wiki": "https://gitlab.com/aplus-framework/libraries/log/wikis/home",
         "source": "https://gitlab.com/aplus-framework/libraries/log",
-        "docs": "https://aplus-framework.gitlab.io/libraries/log/docs/"
+        "docs": "https://docs.aplus-framework.com/guides/libraries/log/"
     }
 }
