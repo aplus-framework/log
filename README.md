@@ -1,7 +1,6 @@
 # Aplus Framework Log Library
 
-- [Homepage](https://aplus-framework.com/docs/log)
-- [API Documentation](https://aplus-framework.gitlab.io/libraries/log/docs/)
+- [Documentation](https://docs.aplus-framework.com/guides/libraries/log/)
 
 [![Pipeline](https://gitlab.com/aplus-framework/libraries/log/badges/master/pipeline.svg)](https://gitlab.com/aplus-framework/libraries/log/-/pipelines?scope=branches)
 [![Coverage](https://gitlab.com/aplus-framework/libraries/log/badges/master/coverage.svg?job=test:php)](https://aplus-framework.gitlab.io/libraries/log/coverage/)
