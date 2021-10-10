@@ -1,3 +1,5 @@
+<a href="https://gitlab.com/aplus-framework/libraries/log"><img src="https://gitlab.com/aplus-framework/libraries/log/-/raw/master/guide/image.png" alt="Aplus Framework Log Library" align="right" width="100"></a>
+
 # Aplus Framework Log Library
 
 - [User Guide](https://docs.aplus-framework.com/guides/libraries/log/index.html)
