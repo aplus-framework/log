@@ -50,5 +50,11 @@
         "wiki": "https://gitlab.com/aplus-framework/libraries/log/wikis/home",
         "source": "https://gitlab.com/aplus-framework/libraries/log",
         "docs": "https://docs.aplus-framework.com/guides/libraries/log/"
-    }
+    },
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://www.paypal.com/donate/?hosted_button_id=NGBNW5PY4VSJ4"
+        }
+    ]
 }
