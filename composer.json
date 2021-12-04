@@ -6,7 +6,7 @@
         "log",
         "logger"
     ],
-    "homepage": "https://docs.aplus-framework.com/guides/libraries/log/",
+    "homepage": "https://aplus-framework.com/packages/log",
     "license": "MIT",
     "authors": [
         {
@@ -47,13 +47,13 @@
     "support": {
         "email": "support@aplus-framework.com",
         "issues": "https://gitlab.com/aplus-framework/libraries/log/issues",
-        "wiki": "https://gitlab.com/aplus-framework/libraries/log/wikis/home",
+        "forum": "https://aplus-framework.com/forum",
         "source": "https://gitlab.com/aplus-framework/libraries/log",
         "docs": "https://docs.aplus-framework.com/guides/libraries/log/"
     },
     "funding": [
         {
-            "type": "other",
+            "type": "Aplus Sponsor",
             "url": "https://aplus-framework.com/sponsor"
         }
     ]
