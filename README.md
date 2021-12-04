@@ -2,6 +2,7 @@
 
 # Aplus Framework Log Library
 
+- [Homepage](https://aplus-framework.com/packages/log)
 - [User Guide](https://docs.aplus-framework.com/guides/libraries/log/index.html)
 - [API Documentation](https://docs.aplus-framework.com/packages/log.html)
 
