@@ -1,6 +1,9 @@
 Log
 ===
 
+.. image:: image.png
+    :alt: Aplus Framework Log Library
+
 Aplus Framework Log Library.
 
 - `Installation`_
