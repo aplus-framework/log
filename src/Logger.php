@@ -79,9 +79,8 @@ class Logger
         if ( ! $directory || ! \is_dir($directory)) {
             throw new InvalidArgumentException('Invalid directory path: ' . $directory);
         }
-        $this->validateLevel($level);
+        $this->setLevel($level);
         $this->directory = $directory . \DIRECTORY_SEPARATOR;
-        $this->level = $level;
     }
 
     /**
@@ -100,7 +99,7 @@ class Logger
     {
         $this->validateLevel($level);
         $this->lastLog = null;
-        if ($level < $this->level) {
+        if ($level < $this->getLevel()) {
             return true;
         }
         $time = \date('H:i:s');
@@ -272,6 +271,18 @@ class Logger
     public function emergency(string $message, array $context = []) : bool
     {
         return $this->log(static::EMERGENCY, $message, $context);
+    }
+
+    public function getLevel() : int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(int $level) : static
+    {
+        $this->validateLevel($level);
+        $this->level = $level;
+        return $this;
     }
 
     /**
