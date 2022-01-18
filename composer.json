@@ -29,7 +29,8 @@
         }
     ],
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "aplus/debug": "^2.3"
     },
     "require-dev": {
         "ext-xdebug": "*",
@@ -59,5 +60,10 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        }
     }
 }

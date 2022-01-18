@@ -10,6 +10,7 @@
 namespace Framework\Log;
 
 use Exception;
+use Framework\Log\Debug\LogCollector;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
@@ -64,6 +65,7 @@ class Logger
      */
     protected int $level = Logger::NOTICE;
     protected Log | null $lastLog = null;
+    protected LogCollector $debugCollector;
 
     /**
      * Logger constructor.
@@ -94,18 +96,38 @@ class Logger
      */
     public function log(int $level, string $message, array $context = []) : bool
     {
+        $debug = isset($this->debugCollector);
+        if ($debug) {
+            $start = \microtime(true);
+        }
         $this->validateLevel($level);
         $this->lastLog = null;
         if ($level < $this->getLevel()) {
             return true;
         }
         $time = \date('H:i:s');
-        $level = $this->getLevelName($level);
+        $levelName = $this->getLevelName($level);
         $id = \bin2hex(\random_bytes(6));
         $message = $this->replaceContext($message, $context);
         $message = $this->sanitizeMessage($message);
-        $message = $time . ' ' . $level . ' ' . $id . ' ' . $message;
-        return $this->write($message);
+        $written = $this->write(
+            $time . ' ' . $levelName . ' ' . $id . ' ' . $message
+        );
+        if ($debug) {
+            $end = \microtime(true);
+            $this->debugCollector->addData([
+                'start' => $start,
+                'end' => $end,
+                'date' => \date('Y-m-d'),
+                'time' => $time,
+                'id' => $id,
+                'level' => $level,
+                'levelName' => $levelName,
+                'message' => $message,
+                'written' => $written,
+            ]);
+        }
+        return $written;
     }
 
     /**
@@ -582,5 +604,12 @@ class Logger
             }
         }
         return $deletedCount;
+    }
+
+    public function setDebugCollector(LogCollector $debugCollector) : static
+    {
+        $this->debugCollector = $debugCollector;
+        $this->debugCollector->setLogger($this);
+        return $this;
     }
 }
