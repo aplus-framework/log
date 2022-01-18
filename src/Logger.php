@@ -332,27 +332,19 @@ class Logger
         return \strtr($message, $context);
     }
 
-    protected function getLevelName(int $level) : string
+    public function getLevelName(int $level) : string
     {
-        switch ($level) {
-            case static::DEBUG:
-                return 'DEBUG';
-            case static::INFO:
-                return 'INFO';
-            case static::NOTICE:
-                return 'NOTICE';
-            case static::WARNING:
-                return 'WARNING';
-            case static::ERROR:
-                return 'ERROR';
-            case static::CRITICAL:
-                return 'CRITICAL';
-            case static::ALERT:
-                return 'ALERT';
-            case static::EMERGENCY:
-                return 'EMERGENCY';
-        }
-        throw new InvalidArgumentException('Invalid level: ' . $level);
+        return match ($level) {
+            static::DEBUG => 'DEBUG',
+            static::INFO => 'INFO',
+            static::NOTICE => 'NOTICE',
+            static::WARNING => 'WARNING',
+            static::ERROR => 'ERROR',
+            static::CRITICAL => 'CRITICAL',
+            static::ALERT => 'ALERT',
+            static::EMERGENCY => 'EMERGENCY',
+            default => throw new InvalidArgumentException('Invalid level: ' . $level)
+        };
     }
 
     #[Pure]
