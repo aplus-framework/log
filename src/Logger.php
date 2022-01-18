@@ -75,12 +75,8 @@ class Logger
      */
     public function __construct(string $directory, int $level = self::DEBUG)
     {
-        $directory = \realpath($directory);
-        if ( ! $directory || ! \is_dir($directory)) {
-            throw new InvalidArgumentException('Invalid directory path: ' . $directory);
-        }
+        $this->setDirectory($directory);
         $this->setLevel($level);
-        $this->directory = $directory . \DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -139,7 +135,7 @@ class Logger
      */
     public function getLogs(string $date, int $offset = 0, int $length = null) : array
     {
-        $file = $this->directory . $date . '.log';
+        $file = $this->getDirectory() . $date . '.log';
         if ( ! \is_file($file)) {
             return [];
         }
@@ -273,6 +269,21 @@ class Logger
         return $this->log(static::EMERGENCY, $message, $context);
     }
 
+    public function getDirectory() : string
+    {
+        return $this->directory;
+    }
+
+    public function setDirectory(string $directory) : static
+    {
+        $directory = \realpath($directory);
+        if ( ! $directory || ! \is_dir($directory)) {
+            throw new InvalidArgumentException('Invalid directory path: ' . $directory);
+        }
+        $this->directory = $directory . \DIRECTORY_SEPARATOR;
+        return $this;
+    }
+
     public function getLevel() : int
     {
         return $this->level;
@@ -361,7 +372,7 @@ class Logger
     protected function write(string $message) : bool
     {
         $date = \date('Y-m-d');
-        $file = $this->directory . $date . '.log';
+        $file = $this->getDirectory() . $date . '.log';
         $isFile = \is_file($file);
         $handle = @\fopen($file, 'ab');
         if ($handle === false) {
@@ -392,13 +403,13 @@ class Logger
         if ($before !== null) {
             $before = \date('Y-m-d', $before);
         }
-        $handle = @\opendir($this->directory);
+        $handle = @\opendir($this->getDirectory());
         if ($handle === false) {
             return false;
         }
         $deletedCount = 0;
         while (($path = \readdir($handle)) !== false) {
-            $filename = $this->directory . $path;
+            $filename = $this->getDirectory() . $path;
             if ($path[0] === '.' || ! \is_file($filename)) {
                 continue;
             }
