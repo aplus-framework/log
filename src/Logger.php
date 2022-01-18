@@ -274,18 +274,26 @@ class Logger
         return $this->log(static::EMERGENCY, $message, $context);
     }
 
+    /**
+     * @return array<int,int>
+     */
+    public function getLevels() : array
+    {
+        return [
+            static::DEBUG,
+            static::INFO,
+            static::NOTICE,
+            static::WARNING,
+            static::ERROR,
+            static::CRITICAL,
+            static::ALERT,
+            static::EMERGENCY,
+        ];
+    }
+
     protected function validateLevel(int $level) : void
     {
-        if ( ! \in_array($level, [
-            static::EMERGENCY,
-            static::ALERT,
-            static::CRITICAL,
-            static::ERROR,
-            static::WARNING,
-            static::NOTICE,
-            static::INFO,
-            static::DEBUG,
-        ], true)) {
+        if ( ! \in_array($level, $this->getLevels(), true)) {
             throw new InvalidArgumentException('Invalid level: ' . $level);
         }
     }
