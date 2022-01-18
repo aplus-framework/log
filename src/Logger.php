@@ -11,6 +11,7 @@ namespace Framework\Log;
 
 use Exception;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -158,13 +159,34 @@ class Logger
      * Detailed debug information.
      *
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return bool
      */
-    public function debug(string $message, array $context = []) : bool
+    public function logDebug(string $message, array $context = []) : bool
     {
         return $this->log(static::DEBUG, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array<string> $context
+     *
+     * @deprecated Use {@see Logger::logDebug()}
+     *
+     * @return bool
+     */
+    #[Deprecated(
+        reason: 'since Log Library version 2.3, use logDebug() instead',
+        replacement: '%class%->logDebug(%parameter0%, %parameter1%)'
+    )]
+    public function debug(string $message, array $context = []) : bool
+    {
+        \trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated',
+            \E_USER_DEPRECATED
+        );
+        return $this->logDebug($message, $context);
     }
 
     /**
@@ -173,26 +195,68 @@ class Logger
      * Example: User logs in, SQL logs.
      *
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return bool
      */
-    public function info(string $message, array $context = []) : bool
+    public function logInfo(string $message, array $context = []) : bool
     {
         return $this->log(static::INFO, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array<string> $context
+     *
+     * @deprecated Use {@see Logger::logInfo()}
+     *
+     * @return bool
+     */
+    #[Deprecated(
+        reason: 'since Log Library version 2.3, use logInfo() instead',
+        replacement: '%class%->logInfo(%parameter0%, %parameter1%)'
+    )]
+    public function info(string $message, array $context = []) : bool
+    {
+        \trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated',
+            \E_USER_DEPRECATED
+        );
+        return $this->logInfo($message, $context);
     }
 
     /**
      * Normal but significant events.
      *
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return bool
      */
-    public function notice(string $message, array $context = []) : bool
+    public function logNotice(string $message, array $context = []) : bool
     {
         return $this->log(static::NOTICE, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array<string> $context
+     *
+     * @deprecated Use {@see Logger::logNotice()}
+     *
+     * @return bool
+     */
+    #[Deprecated(
+        reason: 'since Log Library version 2.3, use logNotice() instead',
+        replacement: '%class%->logNotice(%parameter0%, %parameter1%)'
+    )]
+    public function notice(string $message, array $context = []) : bool
+    {
+        \trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated',
+            \E_USER_DEPRECATED
+        );
+        return $this->logNotice($message, $context);
     }
 
     /**
@@ -202,13 +266,34 @@ class Logger
      * that are not necessarily wrong.
      *
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return bool
      */
-    public function warning(string $message, array $context = []) : bool
+    public function logWarning(string $message, array $context = []) : bool
     {
         return $this->log(static::WARNING, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array<string> $context
+     *
+     * @deprecated Use {@see Logger::logWarning()}
+     *
+     * @return bool
+     */
+    #[Deprecated(
+        reason: 'since Log Library version 2.3, use logWarning() instead',
+        replacement: '%class%->logWarning(%parameter0%, %parameter1%)'
+    )]
+    public function warning(string $message, array $context = []) : bool
+    {
+        \trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated',
+            \E_USER_DEPRECATED
+        );
+        return $this->logWarning($message, $context);
     }
 
     /**
@@ -216,13 +301,34 @@ class Logger
      * be logged and monitored.
      *
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return bool
      */
-    public function error(string $message, array $context = []) : bool
+    public function logError(string $message, array $context = []) : bool
     {
         return $this->log(static::ERROR, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array<string> $context
+     *
+     * @deprecated Use {@see Logger::logError()}
+     *
+     * @return bool
+     */
+    #[Deprecated(
+        reason: 'since Log Library version 2.3, use logError() instead',
+        replacement: '%class%->logError(%parameter0%, %parameter1%)'
+    )]
+    public function error(string $message, array $context = []) : bool
+    {
+        \trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated',
+            \E_USER_DEPRECATED
+        );
+        return $this->logError($message, $context);
     }
 
     /**
@@ -231,13 +337,34 @@ class Logger
      * Example: Application component unavailable, unexpected exception.
      *
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return bool
      */
-    public function critical(string $message, array $context = []) : bool
+    public function logCritical(string $message, array $context = []) : bool
     {
         return $this->log(static::CRITICAL, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array<string> $context
+     *
+     * @deprecated Use {@see Logger::logCritical()}
+     *
+     * @return bool
+     */
+    #[Deprecated(
+        reason: 'since Log Library version 2.3, use logCritical() instead',
+        replacement: '%class%->logCritical(%parameter0%, %parameter1%)'
+    )]
+    public function critical(string $message, array $context = []) : bool
+    {
+        \trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated',
+            \E_USER_DEPRECATED
+        );
+        return $this->logCritical($message, $context);
     }
 
     /**
@@ -247,26 +374,68 @@ class Logger
      * trigger the SMS alerts and wake you up.
      *
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return bool
      */
-    public function alert(string $message, array $context = []) : bool
+    public function logAlert(string $message, array $context = []) : bool
     {
         return $this->log(static::ALERT, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array<string> $context
+     *
+     * @deprecated Use {@see Logger::logAlert()}
+     *
+     * @return bool
+     */
+    #[Deprecated(
+        reason: 'since Log Library version 2.3, use logAlert() instead',
+        replacement: '%class%->logAlert(%parameter0%, %parameter1%)'
+    )]
+    public function alert(string $message, array $context = []) : bool
+    {
+        \trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated',
+            \E_USER_DEPRECATED
+        );
+        return $this->logAlert($message, $context);
     }
 
     /**
      * System is unusable.
      *
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return bool
      */
-    public function emergency(string $message, array $context = []) : bool
+    public function logEmergency(string $message, array $context = []) : bool
     {
         return $this->log(static::EMERGENCY, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array<string> $context
+     *
+     * @deprecated Use {@see Logger::logEmergency()}
+     *
+     * @return bool
+     */
+    #[Deprecated(
+        reason: 'since Log Library version 2.3, use logEmergency() instead',
+        replacement: '%class%->logEmergency(%parameter0%, %parameter1%)'
+    )]
+    public function emergency(string $message, array $context = []) : bool
+    {
+        \trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated',
+            \E_USER_DEPRECATED
+        );
+        return $this->logEmergency($message, $context);
     }
 
     public function getDirectory() : string
