@@ -50,7 +50,7 @@ class LogCollector extends Collector
         \ob_start(); ?>
         <p><strong>Directory:</strong> <?= \htmlentities($this->logger->getDirectory()) ?></p>
         <p><strong>Log Level:</strong> <?= \htmlentities((string) $this->logger->getLevel()) ?>
-            - <?= \htmlentities($this->logger->getLevelName($this->logger->getLevel())) ?>
+            <?= \htmlentities($this->logger->getLevelName($this->logger->getLevel())) ?>
         </p>
         <h1>Logs</h1>
         <?= $this->renderLogs() ?>
@@ -80,11 +80,11 @@ class LogCollector extends Collector
     protected function renderLogs() : string
     {
         if ( ! $this->hasData()) {
-            return '<p>No logs.</p>';
+            return '<p>No log has been set.</p>';
         }
         $count = \count($this->getData());
         \ob_start(); ?>
-        <p><?= $count ?> log<?= $count === 1 ? '' : 's' ?>.</p>
+        <p><?= $count ?> log<?= $count === 1 ? ' has' : 's have' ?> been set.</p>
         <table>
             <thead>
             <tr>
