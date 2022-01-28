@@ -73,6 +73,7 @@ class LogCollector extends Collector
         <table>
             <thead>
             <tr>
+                <th>#</th>
                 <th>Date</th>
                 <th>Time</th>
                 <th>Id</th>
@@ -83,8 +84,9 @@ class LogCollector extends Collector
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($this->getData() as $data): ?>
+            <?php foreach ($this->getData() as $index => $data): ?>
                 <tr>
+                    <td><?= $index + 1 ?></td>
                     <td><?= \htmlentities($data['date']) ?></td>
                     <td><?= \htmlentities($data['time']) ?></td>
                     <td><?= \htmlentities($data['id']) ?></td>
