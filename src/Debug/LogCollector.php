@@ -49,8 +49,10 @@ class LogCollector extends Collector
         }
         \ob_start(); ?>
         <p><strong>Directory:</strong> <?= \htmlentities($this->logger->getDirectory()) ?></p>
-        <p><strong>Log Level:</strong> <?= \htmlentities((string) $this->logger->getLevel()) ?>
-            <?= \htmlentities($this->logger->getLevelName($this->logger->getLevel())) ?>
+        <p><strong>Log Level:</strong> <?= \htmlentities(
+            $this->logger->getLevel() . ' ' .
+                $this->logger->getLevelName($this->logger->getLevel())
+        ) ?>
         </p>
         <h1>Logs</h1>
         <?= $this->renderLogs() ?>
