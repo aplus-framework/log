@@ -10,45 +10,56 @@
 namespace Tests\Log;
 
 use Framework\Log\Log;
+use Framework\Log\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 final class LogTest extends TestCase
 {
     protected Log $log;
+    protected int $time;
+    protected string $message;
 
     protected function setUp() : void
     {
+        $this->time = \time();
         $this->log = new Log(
-            '/tmp/logs/2021-06-10.log',
-            '01:55:15 DEBUG abc123 foo bar',
-            true
+            LogLevel::INFO,
+            <<<'EOL'
+                foo
+                bar baz
+
+                bah tche
+
+                EOL,
+            $this->time,
+            'abc123'
         );
     }
 
     public function testProperties() : void
     {
-        self::assertSame('/tmp/logs/2021-06-10.log', $this->log->filename);
-        self::assertSame('2021-06-10', $this->log->date);
-        self::assertSame('01:55:15', $this->log->time);
-        self::assertSame('DEBUG', $this->log->levelName);
+        self::assertSame(LogLevel::INFO, $this->log->level);
+        self::assertSame(\time(), $this->log->time);
         self::assertSame('abc123', $this->log->id);
-        self::assertSame('foo bar', $this->log->message);
-        self::assertTrue($this->log->written);
-    }
-
-    public function testInvalidProperty() : void
-    {
-        $this->expectException(\Error::class);
-        $this->expectExceptionMessage(
-            'Undefined property: Framework\Log\Log::$foo'
+        self::assertSame(
+            <<<'EOL'
+                foo
+                bar baz
+                bah tche
+                EOL,
+            $this->log->message
         );
-        $this->log->foo; // @phpstan-ignore-line
     }
 
     public function testToString() : void
     {
         self::assertSame(
-            '01:55:15 DEBUG abc123 foo bar',
+            \date('Y-m-d H:i:s', $this->time) . ' INFO abc123 ' .
+            <<<'EOL'
+                foo
+                bar baz
+                bah tche
+                EOL,
             (string) $this->log
         );
     }

@@ -9,51 +9,46 @@
  */
 namespace Framework\Log;
 
-use Error;
-
 /**
  * Class Log.
- *
- * @property-read string $filename
- * @property-read string $date
- * @property-read string $time
- * @property-read string $levelName
- * @property-read string $id
- * @property-read string $message
- * @property-read bool   $written
  *
  * @package log
  */
 class Log implements \Stringable
 {
-    protected string $filename;
-    protected string $date;
-    protected string $time;
-    protected string $levelName;
-    protected string $id;
-    protected string $message;
-    protected bool $written;
+    public readonly LogLevel $level;
+    public readonly string $message;
+    public readonly int $time;
+    public readonly string $id;
 
-    public function __construct(string $filename, string $message, bool $written)
+    public function __construct(LogLevel $level, string $message, int $time, string $id)
     {
-        $this->filename = $filename;
-        $this->date = \substr($filename, \strrpos($filename, \DIRECTORY_SEPARATOR) + 1, -4);
-        [$this->time, $this->levelName, $this->id, $this->message] = \explode(' ', $message, 4);
-        $this->written = $written;
-    }
-
-    public function __get(string $name) : mixed
-    {
-        if (\property_exists($this, $name)) {
-            return $this->{$name};
-        }
-        throw new Error(
-            'Undefined property: ' . static::class . '::$' . $name
-        );
+        $this->level = $level;
+        $this->message = $this->sanitizeMessage($message);
+        $this->time = $time;
+        $this->id = $id;
     }
 
     public function __toString() : string
     {
-        return \implode(' ', [$this->time, $this->levelName, $this->id, $this->message]);
+        return \implode(' ', [
+            \date('Y-m-d H:i:s', $this->time),
+            $this->level->name,
+            $this->id,
+            $this->message,
+        ]);
+    }
+
+    protected function sanitizeMessage(string $message) : string
+    {
+        $message = \explode(\PHP_EOL, $message);
+        $lines = [];
+        foreach ($message as $line) {
+            $line = \trim($line);
+            if ($line !== '') {
+                $lines[] = $line;
+            }
+        }
+        return \implode(\PHP_EOL, $lines);
     }
 }
