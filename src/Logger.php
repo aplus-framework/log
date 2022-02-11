@@ -12,7 +12,6 @@ namespace Framework\Log;
 use Exception;
 use Framework\Log\Debug\LogCollector;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -22,107 +21,110 @@ use JetBrains\PhpStorm\Pure;
  *
  * @package log
  */
-class Logger
+abstract class Logger
 {
     /**
-     * Emergency level.
+     * Logs destination.
      */
-    public const EMERGENCY = 7;
+    protected string $destination;
     /**
-     * Alert level.
+     * @var array<mixed>
      */
-    public const ALERT = 6;
-    /**
-     * Critical level.
-     */
-    public const CRITICAL = 5;
-    /**
-     * Error level.
-     */
-    public const ERROR = 4;
-    /**
-     * Warning level.
-     */
-    public const WARNING = 3;
-    /**
-     * Notice level.
-     */
-    public const NOTICE = 2;
-    /**
-     * Info level.
-     */
-    public const INFO = 1;
-    /**
-     * Debug level.
-     */
-    public const DEBUG = 0;
-    /**
-     * Logs directory path.
-     */
-    protected string $directory;
+    protected array $config;
     /**
      * Active log level.
      */
-    protected int $level = Logger::NOTICE;
+    protected LogLevel $level = LogLevel::DEBUG;
     protected Log | null $lastLog = null;
     protected LogCollector $debugCollector;
 
     /**
      * Logger constructor.
      *
-     * @param string $directory
-     * @param int $level
-     *
-     * @throws InvalidArgumentException if directory is invalid or the log level
-     * is invalid
+     * @param string $destination
+     * @param LogLevel $level
+     * @param array<mixed> $config
      */
-    public function __construct(string $directory, int $level = self::DEBUG)
-    {
-        $this->setDirectory($directory);
+    public function __construct(
+        string $destination,
+        LogLevel $level = LogLevel::DEBUG,
+        array $config = []
+    ) {
+        $this->setDestination($destination);
         $this->setLevel($level);
+        $this->setConfig($config);
+    }
+
+    protected function setDestination(string $destination) : static
+    {
+        $this->destination = $destination;
+        return $this;
+    }
+
+    public function getDestination() : string
+    {
+        return $this->destination;
+    }
+
+    /**
+     * @param array<mixed> $config
+     *
+     * @return static
+     */
+    protected function setConfig(array $config) : static
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    protected function getConfig() : array
+    {
+        return $this->config;
     }
 
     /**
      * Logs with an arbitrary level.
      *
-     * @param int $level
+     * @param LogLevel $level
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @throws Exception if random_bytes cannot gather sufficient entropy
      * @throws InvalidArgumentException if log level is invalid
      *
      * @return bool
      */
-    public function log(int $level, string $message, array $context = []) : bool
+    public function log(LogLevel $level, string $message, array $context = []) : bool
     {
         $debug = isset($this->debugCollector);
         if ($debug) {
             $start = \microtime(true);
         }
-        $this->validateLevel($level);
         $this->lastLog = null;
-        if ($level < $this->getLevel()) {
+        if ($level->value < $this->getLevel()->value) {
             return true;
         }
-        $time = \date('H:i:s');
-        $levelName = $this->getLevelName($level);
+        $time = \time();
         $id = \bin2hex(\random_bytes(6));
         $message = $this->replaceContext($message, $context);
-        $message = $this->sanitizeMessage($message);
-        $written = $this->write(
-            $time . ' ' . $levelName . ' ' . $id . ' ' . $message
-        );
+        $log = new Log($level, $message, $time, $id);
+        $written = $this->write($log);
+        if ($written) {
+            $this->lastLog = $log;
+        }
         if ($debug) {
             $end = \microtime(true);
             $this->debugCollector->addData([
                 'start' => $start,
                 'end' => $end,
-                'date' => \date('Y-m-d'),
-                'time' => $time,
+                'date' => \date('Y-m-d', $time),
+                'time' => \date('H:i:s', $time),
                 'id' => $id,
-                'level' => $level,
-                'levelName' => $levelName,
+                'level' => $level->value,
+                'levelName' => $level->name,
                 'message' => $message,
                 'written' => $written,
             ]);
@@ -142,42 +144,6 @@ class Logger
     }
 
     /**
-     * Get logs by date.
-     *
-     * @param string $date The date in the format `Y-m-d`
-     * @param int $offset If offset is non-negative, the sequence will start at
-     * that offset in the array. If offset is negative, the sequence will start
-     * that far from the end of the array.
-     * @param int|null $length If length is given and is positive, then the
-     * sequence will have that many elements in it. If length is given and is
-     * negative then the sequence will stop that many elements from the end of
-     * the array. If it is omitted, then the sequence will have everything from
-     * offset up until the end of the array.
-     *
-     * @return array<int,Log>
-     */
-    public function getLogs(string $date, int $offset = 0, int $length = null) : array
-    {
-        $file = $this->getDirectory() . $date . '.log';
-        if ( ! \is_file($file)) {
-            return [];
-        }
-        $contents = (string) \file_get_contents($file);
-        $contents = \explode(\PHP_EOL . \PHP_EOL, $contents);
-        if ($contents && $contents[\array_key_last($contents)] === '') { // @phpstan-ignore-line
-            \array_pop($contents);
-        }
-        if ($contents && ($offset || $length)) {
-            $contents = \array_slice($contents, $offset, $length);
-        }
-        $logs = [];
-        foreach ($contents as $log) {
-            $logs[] = new Log($file, $log, true);
-        }
-        return $logs;
-    }
-
-    /**
      * Detailed debug information.
      *
      * @param string $message
@@ -187,28 +153,7 @@ class Logger
      */
     public function logDebug(string $message, array $context = []) : bool
     {
-        return $this->log(static::DEBUG, $message, $context);
-    }
-
-    /**
-     * @param string $message
-     * @param array<string> $context
-     *
-     * @deprecated Use {@see Logger::logDebug()}
-     *
-     * @return bool
-     */
-    #[Deprecated(
-        reason: 'since Log Library version 2.3, use logDebug() instead',
-        replacement: '%class%->logDebug(%parameter0%, %parameter1%)'
-    )]
-    public function debug(string $message, array $context = []) : bool
-    {
-        \trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated',
-            \E_USER_DEPRECATED
-        );
-        return $this->logDebug($message, $context);
+        return $this->log(LogLevel::DEBUG, $message, $context);
     }
 
     /**
@@ -223,28 +168,7 @@ class Logger
      */
     public function logInfo(string $message, array $context = []) : bool
     {
-        return $this->log(static::INFO, $message, $context);
-    }
-
-    /**
-     * @param string $message
-     * @param array<string> $context
-     *
-     * @deprecated Use {@see Logger::logInfo()}
-     *
-     * @return bool
-     */
-    #[Deprecated(
-        reason: 'since Log Library version 2.3, use logInfo() instead',
-        replacement: '%class%->logInfo(%parameter0%, %parameter1%)'
-    )]
-    public function info(string $message, array $context = []) : bool
-    {
-        \trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated',
-            \E_USER_DEPRECATED
-        );
-        return $this->logInfo($message, $context);
+        return $this->log(LogLevel::INFO, $message, $context);
     }
 
     /**
@@ -257,28 +181,7 @@ class Logger
      */
     public function logNotice(string $message, array $context = []) : bool
     {
-        return $this->log(static::NOTICE, $message, $context);
-    }
-
-    /**
-     * @param string $message
-     * @param array<string> $context
-     *
-     * @deprecated Use {@see Logger::logNotice()}
-     *
-     * @return bool
-     */
-    #[Deprecated(
-        reason: 'since Log Library version 2.3, use logNotice() instead',
-        replacement: '%class%->logNotice(%parameter0%, %parameter1%)'
-    )]
-    public function notice(string $message, array $context = []) : bool
-    {
-        \trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated',
-            \E_USER_DEPRECATED
-        );
-        return $this->logNotice($message, $context);
+        return $this->log(LogLevel::NOTICE, $message, $context);
     }
 
     /**
@@ -294,28 +197,7 @@ class Logger
      */
     public function logWarning(string $message, array $context = []) : bool
     {
-        return $this->log(static::WARNING, $message, $context);
-    }
-
-    /**
-     * @param string $message
-     * @param array<string> $context
-     *
-     * @deprecated Use {@see Logger::logWarning()}
-     *
-     * @return bool
-     */
-    #[Deprecated(
-        reason: 'since Log Library version 2.3, use logWarning() instead',
-        replacement: '%class%->logWarning(%parameter0%, %parameter1%)'
-    )]
-    public function warning(string $message, array $context = []) : bool
-    {
-        \trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated',
-            \E_USER_DEPRECATED
-        );
-        return $this->logWarning($message, $context);
+        return $this->log(LogLevel::WARNING, $message, $context);
     }
 
     /**
@@ -329,28 +211,7 @@ class Logger
      */
     public function logError(string $message, array $context = []) : bool
     {
-        return $this->log(static::ERROR, $message, $context);
-    }
-
-    /**
-     * @param string $message
-     * @param array<string> $context
-     *
-     * @deprecated Use {@see Logger::logError()}
-     *
-     * @return bool
-     */
-    #[Deprecated(
-        reason: 'since Log Library version 2.3, use logError() instead',
-        replacement: '%class%->logError(%parameter0%, %parameter1%)'
-    )]
-    public function error(string $message, array $context = []) : bool
-    {
-        \trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated',
-            \E_USER_DEPRECATED
-        );
-        return $this->logError($message, $context);
+        return $this->log(LogLevel::ERROR, $message, $context);
     }
 
     /**
@@ -365,28 +226,7 @@ class Logger
      */
     public function logCritical(string $message, array $context = []) : bool
     {
-        return $this->log(static::CRITICAL, $message, $context);
-    }
-
-    /**
-     * @param string $message
-     * @param array<string> $context
-     *
-     * @deprecated Use {@see Logger::logCritical()}
-     *
-     * @return bool
-     */
-    #[Deprecated(
-        reason: 'since Log Library version 2.3, use logCritical() instead',
-        replacement: '%class%->logCritical(%parameter0%, %parameter1%)'
-    )]
-    public function critical(string $message, array $context = []) : bool
-    {
-        \trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated',
-            \E_USER_DEPRECATED
-        );
-        return $this->logCritical($message, $context);
+        return $this->log(LogLevel::CRITICAL, $message, $context);
     }
 
     /**
@@ -402,28 +242,7 @@ class Logger
      */
     public function logAlert(string $message, array $context = []) : bool
     {
-        return $this->log(static::ALERT, $message, $context);
-    }
-
-    /**
-     * @param string $message
-     * @param array<string> $context
-     *
-     * @deprecated Use {@see Logger::logAlert()}
-     *
-     * @return bool
-     */
-    #[Deprecated(
-        reason: 'since Log Library version 2.3, use logAlert() instead',
-        replacement: '%class%->logAlert(%parameter0%, %parameter1%)'
-    )]
-    public function alert(string $message, array $context = []) : bool
-    {
-        \trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated',
-            \E_USER_DEPRECATED
-        );
-        return $this->logAlert($message, $context);
+        return $this->log(LogLevel::ALERT, $message, $context);
     }
 
     /**
@@ -436,84 +255,23 @@ class Logger
      */
     public function logEmergency(string $message, array $context = []) : bool
     {
-        return $this->log(static::EMERGENCY, $message, $context);
+        return $this->log(LogLevel::EMERGENCY, $message, $context);
     }
 
-    /**
-     * @param string $message
-     * @param array<string> $context
-     *
-     * @deprecated Use {@see Logger::logEmergency()}
-     *
-     * @return bool
-     */
-    #[Deprecated(
-        reason: 'since Log Library version 2.3, use logEmergency() instead',
-        replacement: '%class%->logEmergency(%parameter0%, %parameter1%)'
-    )]
-    public function emergency(string $message, array $context = []) : bool
-    {
-        \trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated',
-            \E_USER_DEPRECATED
-        );
-        return $this->logEmergency($message, $context);
-    }
-
-    public function getDirectory() : string
-    {
-        return $this->directory;
-    }
-
-    public function setDirectory(string $directory) : static
-    {
-        $directory = \realpath($directory);
-        if ( ! $directory || ! \is_dir($directory)) {
-            throw new InvalidArgumentException('Invalid directory path: ' . $directory);
-        }
-        $this->directory = $directory . \DIRECTORY_SEPARATOR;
-        return $this;
-    }
-
-    public function getLevel() : int
+    public function getLevel() : LogLevel
     {
         return $this->level;
     }
 
-    public function setLevel(int $level) : static
+    public function setLevel(LogLevel $level) : static
     {
-        $this->validateLevel($level);
         $this->level = $level;
         return $this;
     }
 
     /**
-     * @return array<int,int>
-     */
-    public function getLevels() : array
-    {
-        return [
-            static::DEBUG,
-            static::INFO,
-            static::NOTICE,
-            static::WARNING,
-            static::ERROR,
-            static::CRITICAL,
-            static::ALERT,
-            static::EMERGENCY,
-        ];
-    }
-
-    protected function validateLevel(int $level) : void
-    {
-        if ( ! \in_array($level, $this->getLevels(), true)) {
-            throw new InvalidArgumentException('Invalid level: ' . $level);
-        }
-    }
-
-    /**
      * @param string $message
-     * @param array<int|string,string> $context
+     * @param array<string> $context
      *
      * @return string
      */
@@ -523,93 +281,12 @@ class Logger
         return \strtr($message, $context);
     }
 
-    public function getLevelName(int $level) : string
-    {
-        return match ($level) {
-            static::DEBUG => 'DEBUG',
-            static::INFO => 'INFO',
-            static::NOTICE => 'NOTICE',
-            static::WARNING => 'WARNING',
-            static::ERROR => 'ERROR',
-            static::CRITICAL => 'CRITICAL',
-            static::ALERT => 'ALERT',
-            static::EMERGENCY => 'EMERGENCY',
-            default => throw new InvalidArgumentException('Invalid level: ' . $level)
-        };
-    }
-
-    #[Pure]
-    protected function sanitizeMessage(string $message) : string
-    {
-        $message = \explode(\PHP_EOL, $message);
-        $lines = [];
-        foreach ($message as $line) {
-            $line = \trim($line);
-            if ($line !== '') {
-                $lines[] = $line;
-            }
-        }
-        return \implode(\PHP_EOL, $lines);
-    }
-
-    protected function write(string $message) : bool
-    {
-        $date = \date('Y-m-d');
-        $file = $this->getDirectory() . $date . '.log';
-        $isFile = \is_file($file);
-        $handle = @\fopen($file, 'ab');
-        if ($handle === false) {
-            $this->lastLog = new Log($file, $message, false);
-            return false;
-        }
-        \flock($handle, \LOCK_EX);
-        $written = \fwrite($handle, $message . \PHP_EOL . \PHP_EOL);
-        \flock($handle, \LOCK_UN);
-        \fclose($handle);
-        if ($isFile === false) {
-            \chmod($file, 0644);
-        }
-        $written = $written !== false;
-        $this->lastLog = new Log($file, $message, $written);
-        return $written;
-    }
-
-    /**
-     * Flush log files.
-     *
-     * @param int|null $before Flush files before timestamp
-     *
-     * @return false|int The number of deleted files or false on failure
-     */
-    public function flush(int $before = null) : int | false
-    {
-        if ($before !== null) {
-            $before = \date('Y-m-d', $before);
-        }
-        $handle = @\opendir($this->getDirectory());
-        if ($handle === false) {
-            return false;
-        }
-        $deletedCount = 0;
-        while (($path = \readdir($handle)) !== false) {
-            $filename = $this->getDirectory() . $path;
-            if ($path[0] === '.' || ! \is_file($filename)) {
-                continue;
-            }
-            if ($path < $before
-                && \str_ends_with($path, '.log')
-                && \unlink($filename)
-            ) {
-                ++$deletedCount;
-            }
-        }
-        return $deletedCount;
-    }
-
     public function setDebugCollector(LogCollector $debugCollector) : static
     {
         $this->debugCollector = $debugCollector;
         $this->debugCollector->setLogger($this);
         return $this;
     }
+
+    abstract protected function write(Log $log) : bool;
 }
