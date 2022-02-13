@@ -11,6 +11,8 @@ namespace Tests\Log\Debug;
 
 use Framework\Log\Debug\LogCollector;
 use Framework\Log\Logger;
+use Framework\Log\Loggers\FileLogger;
+use Framework\Log\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 final class LogCollectorTest extends TestCase
@@ -24,11 +26,8 @@ final class LogCollectorTest extends TestCase
 
     protected function makeLogger() : Logger
     {
-        $directory = \sys_get_temp_dir() . '/logs';
-        if ( ! \is_dir($directory)) {
-            \mkdir($directory);
-        }
-        $logger = new Logger($directory);
+        $destination = \sys_get_temp_dir() . '/tests.log';
+        $logger = new FileLogger(destination: $destination);
         $logger->setDebugCollector($this->collector);
         return $logger;
     }
@@ -41,11 +40,11 @@ final class LogCollectorTest extends TestCase
         );
     }
 
-    public function testDirectory() : void
+    public function testDestination() : void
     {
         $this->makeLogger();
         self::assertStringContainsString(
-            \realpath(\sys_get_temp_dir() . '/logs') . \DIRECTORY_SEPARATOR,
+            \sys_get_temp_dir() . '/tests.log',
             $this->collector->getContents()
         );
     }
@@ -57,7 +56,7 @@ final class LogCollectorTest extends TestCase
             '0 DEBUG',
             $this->collector->getContents()
         );
-        $logger->setLevel(Logger::CRITICAL);
+        $logger->setLevel(LogLevel::CRITICAL);
         self::assertStringContainsString(
             '5 CRITICAL',
             $this->collector->getContents()

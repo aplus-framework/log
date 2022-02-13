@@ -11,6 +11,7 @@ namespace Framework\Log\Debug;
 
 use Framework\Debug\Collector;
 use Framework\Log\Logger;
+use Framework\Log\LogLevel;
 
 /**
  * Class LogCollector.
@@ -48,10 +49,17 @@ class LogCollector extends Collector
             return '<p>A Logger instance has not been set on this collector.</p>';
         }
         \ob_start(); ?>
-        <p><strong>Directory:</strong> <?= \htmlentities($this->logger->getDirectory()) ?></p>
+        <p><strong>Logger:</strong> <?= $this->logger::class ?></p>
+        <?php
+        $destination = $this->logger->getDestination();
+        if ($destination):
+            ?>
+            <p><strong>Destination:</strong> <?= \htmlentities($destination) ?></p>
+        <?php
+        endif;
+        $level = $this->logger->getLevel(); ?>
         <p><strong>Log Level:</strong> <?= \htmlentities(
-            $this->logger->getLevel() . ' ' .
-                $this->logger->getLevelName($this->logger->getLevel())
+            $level->value . ' ' . $level->name
         ) ?>
         </p>
         <h1>Logs</h1>
@@ -65,12 +73,12 @@ class LogCollector extends Collector
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($this->logger->getLevels() as $level): ?>
+            <?php foreach (LogLevel::cases() as $case): ?>
                 <tr<?= $level === $this->logger->getLevel()
                     ? ' class="active" title="Current level"'
                     : '' ?>>
-                    <td><?= \htmlentities((string) $level) ?></td>
-                    <td><?= \htmlentities($this->logger->getLevelName($level)) ?></td>
+                    <td><?= $case->value ?></td>
+                    <td><?= \htmlentities($case->name) ?></td>
                 </tr>
             <?php endforeach ?>
             </tbody>
