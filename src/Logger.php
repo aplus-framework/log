@@ -9,9 +9,7 @@
  */
 namespace Framework\Log;
 
-use Exception;
 use Framework\Log\Debug\LogCollector;
-use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -92,9 +90,6 @@ abstract class Logger
      * @param string $message
      * @param array<string> $context
      *
-     * @throws Exception if random_bytes cannot gather sufficient entropy
-     * @throws InvalidArgumentException if log level is invalid
-     *
      * @return bool
      */
     public function log(LogLevel $level, string $message, array $context = []) : bool
@@ -108,7 +103,7 @@ abstract class Logger
             return true;
         }
         $time = \time();
-        $id = \bin2hex(\random_bytes(6));
+        $id = $this->makeId();
         $message = $this->replaceContext($message, $context);
         $log = new Log($level, $message, $time, $id);
         $written = $this->write($log);
@@ -130,6 +125,11 @@ abstract class Logger
             ]);
         }
         return $written;
+    }
+
+    protected function makeId() : string
+    {
+        return \bin2hex(\random_bytes(6));
     }
 
     /**
