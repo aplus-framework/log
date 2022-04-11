@@ -35,7 +35,7 @@ class LogCollector extends Collector
             $activities[] = [
                 'collector' => $this->getName(),
                 'class' => static::class,
-                'description' => 'Set log ' . $index + 1,
+                'description' => 'Set log ' . ($index + 1),
                 'start' => $data['start'],
                 'end' => $data['end'],
             ];
