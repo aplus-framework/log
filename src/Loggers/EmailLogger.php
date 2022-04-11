@@ -32,7 +32,13 @@ class EmailLogger extends Logger
     protected function makeHeaders(Log $log) : string
     {
         $headers = $this->getConfig()['headers'] ?? [];
-        $headers['Subject'] ??= 'Log ' . $log->level->name . ' ' . $log->id;
+        $names = [];
+        foreach ($headers as $name => $value) {
+            $names[] = \strtolower($name);
+        }
+        if ( ! \in_array('subject', $names, true)) {
+            $headers['Subject'] = 'Log ' . $log->level->name . ' ' . $log->id;
+        }
         $headerLines = [];
         foreach ($headers as $name => $value) {
             $headerLines[] = $name . ': ' . $value;
