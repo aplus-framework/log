@@ -74,7 +74,7 @@ class LogCollector extends Collector
             </thead>
             <tbody>
             <?php foreach (LogLevel::cases() as $case): ?>
-                <tr<?= $level === $this->logger->getLevel()
+                <tr<?= $case === $this->logger->getLevel()
                     ? ' class="active" title="Current level"'
                     : '' ?>>
                     <td><?= $case->value ?></td>
