@@ -14,7 +14,7 @@ namespace Framework\Log;
  *
  * @package log
  */
-enum LogLevel: int
+enum LogLevel : int
 {
     case DEBUG = 0;
     case INFO = 1;
