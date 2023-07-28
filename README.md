@@ -1,4 +1,4 @@
-<a href="https://gitlab.com/aplus-framework/libraries/log"><img src="https://gitlab.com/aplus-framework/libraries/log/-/raw/master/guide/image.png" alt="Aplus Framework Log Library" align="right" width="100"></a>
+<a href="https://github.com/aplus-framework/log"><img src="https://raw.githubusercontent.com/aplus-framework/log/master/guide/image.png" alt="Aplus Framework Log Library" align="right" width="100"></a>
 
 # Aplus Framework Log Library
 
@@ -7,7 +7,6 @@
 - [API Documentation](https://docs.aplus-framework.com/packages/log.html)
 
 [![tests](https://github.com/aplus-framework/log/actions/workflows/tests.yml/badge.svg)](https://github.com/aplus-framework/log/actions/workflows/tests.yml)
-[![pipeline](https://gitlab.com/aplus-framework/libraries/log/badges/master/pipeline.svg)](https://gitlab.com/aplus-framework/libraries/log/-/pipelines?scope=branches)
-[![coverage](https://gitlab.com/aplus-framework/libraries/log/badges/master/coverage.svg?job=test:php)](https://aplus-framework.gitlab.io/libraries/log/coverage/)
+[![coverage](https://coveralls.io/repos/github/aplus-framework/log/badge.svg?branch=master)](https://coveralls.io/github/aplus-framework/log?branch=master)
 [![packagist](https://img.shields.io/packagist/v/aplus/log)](https://packagist.org/packages/aplus/log)
 [![open-source](https://img.shields.io/badge/open--source-sponsor-magenta)](https://aplus-framework.com/sponsor)

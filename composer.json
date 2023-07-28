@@ -17,9 +17,9 @@
     "homepage": "https://aplus-framework.com/packages/log",
     "support": {
         "email": "support@aplus-framework.com",
-        "issues": "https://gitlab.com/aplus-framework/libraries/log/issues",
+        "issues": "https://github.com/aplus-framework/log/issues",
         "forum": "https://aplus-framework.com/forum",
-        "source": "https://gitlab.com/aplus-framework/libraries/log",
+        "source": "https://github.com/aplus-framework/log",
         "docs": "https://docs.aplus-framework.com/guides/libraries/log/"
     },
     "funding": [
