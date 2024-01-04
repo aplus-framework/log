@@ -22,7 +22,7 @@ class EmailLogger extends Logger
 {
     protected function setDestination(string $destination) : static
     {
-        if ( ! \filter_var($destination, \FILTER_VALIDATE_EMAIL)) {
+        if (!\filter_var($destination, \FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('Invalid email destination: ' . $destination);
         }
         $this->destination = $destination;
@@ -36,7 +36,7 @@ class EmailLogger extends Logger
         foreach ($headers as $name => $value) {
             $names[] = \strtolower($name);
         }
-        if ( ! \in_array('subject', $names, true)) {
+        if (!\in_array('subject', $names, true)) {
             $headers['Subject'] = 'Log ' . $log->level->name . ' ' . $log->id;
         }
         $headerLines = [];

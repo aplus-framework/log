@@ -45,7 +45,7 @@ class LogCollector extends Collector
 
     public function getContents() : string
     {
-        if ( ! isset($this->logger)) {
+        if (!isset($this->logger)) {
             return '<p>A Logger instance has not been set on this collector.</p>';
         }
         \ob_start(); ?>
@@ -89,7 +89,7 @@ class LogCollector extends Collector
 
     protected function renderLogs() : string
     {
-        if ( ! $this->hasData()) {
+        if (!$this->hasData()) {
             return '<p>No log has been set.</p>';
         }
         $count = \count($this->getData());

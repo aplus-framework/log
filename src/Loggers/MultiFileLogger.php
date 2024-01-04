@@ -23,7 +23,7 @@ class MultiFileLogger extends Logger
     protected function setDestination(string $destination) : static
     {
         $directory = \realpath($destination);
-        if ( ! $directory || ! \is_dir($directory)) {
+        if (!$directory || !\is_dir($directory)) {
             throw new InvalidArgumentException('Invalid directory destination: ' . $destination);
         }
         $this->destination = $directory . \DIRECTORY_SEPARATOR;

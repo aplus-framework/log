@@ -17,7 +17,7 @@ final class MultiFileLoggerTest extends TestCase
     protected function setUp() : void
     {
         $destination = \sys_get_temp_dir() . '/logs';
-        if ( ! \is_dir($destination)) {
+        if (!\is_dir($destination)) {
             \mkdir($destination);
         }
         \chmod($destination, 0777);

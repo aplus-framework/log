@@ -22,7 +22,7 @@ class FileLogger extends Logger
 {
     protected function setDestination(string $destination) : static
     {
-        if ( ! \is_file($destination) && ! \is_dir(\dirname($destination))) {
+        if (!\is_file($destination) && !\is_dir(\dirname($destination))) {
             throw new InvalidArgumentException('Invalid file destination: ' . $destination);
         }
         $this->destination = $destination;
