@@ -190,6 +190,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(
             '10 is not a valid backing value for enum Framework\Log\LogLevel'
         );
-        $this->logger->setLevel(10);
+        $this->logger->log(10, 'Foo bar');
     }
 }
