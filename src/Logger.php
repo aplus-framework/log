@@ -40,12 +40,12 @@ abstract class Logger
      * Logger constructor.
      *
      * @param string $destination
-     * @param LogLevel $level
+     * @param int|LogLevel $level
      * @param array<mixed> $config
      */
     public function __construct(
         string $destination,
-        LogLevel $level = LogLevel::DEBUG,
+        LogLevel|int $level = LogLevel::DEBUG,
         array $config = []
     ) {
         $this->setDestination($destination);
@@ -86,17 +86,20 @@ abstract class Logger
     /**
      * Logs with an arbitrary level.
      *
-     * @param LogLevel $level
+     * @param int|LogLevel $level
      * @param string $message
      * @param array<string> $context
      *
      * @return bool
      */
-    public function log(LogLevel $level, string $message, array $context = []) : bool
+    public function log(LogLevel|int $level, string $message, array $context = []) : bool
     {
         $debug = isset($this->debugCollector);
         if ($debug) {
             $start = \microtime(true);
+        }
+        if (\is_int($level)) {
+            $level = LogLevel::from($level);
         }
         $this->lastLog = null;
         if ($level->value < $this->getLevel()->value) {
@@ -263,8 +266,11 @@ abstract class Logger
         return $this->level;
     }
 
-    public function setLevel(LogLevel $level) : static
+    public function setLevel(LogLevel|int $level) : static
     {
+        if (\is_int($level)) {
+            $level = LogLevel::from($level);
+        }
         $this->level = $level;
         return $this;
     }

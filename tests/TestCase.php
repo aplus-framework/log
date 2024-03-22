@@ -167,4 +167,29 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->logger->logDebug('foo');
         self::assertNull($this->logger->getLastLog());
     }
+
+    public function testLogLevel() : void
+    {
+        self::assertSame(LogLevel::DEBUG, $this->logger->getLevel());
+        $this->logger->setLevel(LogLevel::INFO);
+        self::assertSame(LogLevel::INFO, $this->logger->getLevel());
+        $this->logger->setLevel(3);
+        self::assertSame(LogLevel::WARNING, $this->logger->getLevel());
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage(
+            '23 is not a valid backing value for enum Framework\Log\LogLevel'
+        );
+        $this->logger->setLevel(23);
+    }
+
+    public function testLogWithInteger() : void
+    {
+        self::assertTrue($this->logger->log(7, 'Foo bar'));
+        self::assertSame(LogLevel::EMERGENCY, $this->logger->getLastLog()->level);
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage(
+            '10 is not a valid backing value for enum Framework\Log\LogLevel'
+        );
+        $this->logger->setLevel(10);
+    }
 }
