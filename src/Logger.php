@@ -33,19 +33,19 @@ abstract class Logger
      * Active log level.
      */
     protected LogLevel $level = LogLevel::DEBUG;
-    protected Log | null $lastLog = null;
+    protected ?Log $lastLog = null;
     protected LogCollector $debugCollector;
 
     /**
      * Logger constructor.
      *
      * @param string $destination
-     * @param int|LogLevel $level
+     * @param LogLevel|int $level
      * @param array<mixed> $config
      */
     public function __construct(
         string $destination,
-        LogLevel|int $level = LogLevel::DEBUG,
+        LogLevel | int $level = LogLevel::DEBUG,
         array $config = []
     ) {
         $this->setDestination($destination);
@@ -86,13 +86,13 @@ abstract class Logger
     /**
      * Logs with an arbitrary level.
      *
-     * @param int|LogLevel $level
+     * @param LogLevel|int $level
      * @param string $message
      * @param array<string> $context
      *
      * @return bool
      */
-    public function log(LogLevel|int $level, string $message, array $context = []) : bool
+    public function log(LogLevel | int $level, string $message, array $context = []) : bool
     {
         $debug = isset($this->debugCollector);
         if ($debug) {
@@ -266,7 +266,7 @@ abstract class Logger
         return $this->level;
     }
 
-    public function setLevel(LogLevel|int $level) : static
+    public function setLevel(LogLevel | int $level) : static
     {
         if (\is_int($level)) {
             $level = LogLevel::from($level);
