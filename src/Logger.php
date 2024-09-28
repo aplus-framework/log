@@ -147,7 +147,7 @@ abstract class Logger
     }
 
     /**
-     * Detailed debug information.
+     * Level 0: Detailed debug information.
      *
      * @param string $message
      * @param array<string> $context
@@ -160,7 +160,7 @@ abstract class Logger
     }
 
     /**
-     * Interesting events.
+     * Level 1: Interesting events.
      *
      * Example: User logs in, SQL logs.
      *
@@ -175,7 +175,7 @@ abstract class Logger
     }
 
     /**
-     * Normal but significant events.
+     * Level 2: Normal but significant events.
      *
      * @param string $message
      * @param array<string> $context
@@ -188,7 +188,7 @@ abstract class Logger
     }
 
     /**
-     * Exceptional occurrences that are not errors.
+     * Level 3: Exceptional occurrences that are not errors.
      *
      * Example: Use of deprecated APIs, poor use of an API, undesirable things
      * that are not necessarily wrong.
@@ -204,8 +204,8 @@ abstract class Logger
     }
 
     /**
-     * Runtime errors that do not require immediate action but should typically
-     * be logged and monitored.
+     * Level 4: Runtime errors that do not require immediate action but should
+     * typically be logged and monitored.
      *
      * @param string $message
      * @param array<string> $context
@@ -218,7 +218,7 @@ abstract class Logger
     }
 
     /**
-     * Critical conditions.
+     * Level 5: Critical conditions.
      *
      * Example: Application component unavailable, unexpected exception.
      *
@@ -233,7 +233,7 @@ abstract class Logger
     }
 
     /**
-     * Action must be taken immediately.
+     * Level 6: Action must be taken immediately.
      *
      * Example: Entire website down, database unavailable, etc. This should
      * trigger the SMS alerts and wake you up.
@@ -249,7 +249,7 @@ abstract class Logger
     }
 
     /**
-     * System is unusable.
+     * Level 7: System is unusable.
      *
      * @param string $message
      * @param array<string> $context
