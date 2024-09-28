@@ -47,4 +47,17 @@ final class MultiFileLoggerTest extends TestCase
         );*/
         self::assertFalse(@$this->logger->logCritical('foo'));
     }
+
+    public function testMessage() : void
+    {
+        $filename = \sys_get_temp_dir() . '/logs/' . \date('Y-m-d') . '.log';
+        if (\is_file($filename)) {
+            \unlink($filename);
+        }
+        $this->logger->logCritical('Foo');
+        $time = \date('H:i:s', $this->logger->getLastLog()?->time);
+        $contents = \file_get_contents($filename);
+        $contents = \substr($contents, 0, 8); // @phpstan-ignore-line
+        self::assertSame($contents, $time);
+    }
 }

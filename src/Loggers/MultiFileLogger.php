@@ -34,6 +34,8 @@ class MultiFileLogger extends Logger
     {
         $filename = $this->getDestination() . \date('Y-m-d', $log->time) . '.log';
         $eol = $this->getConfig()['eol'] ?? \PHP_EOL . \PHP_EOL;
-        return \error_log($log . $eol, 3, $filename);
+        $message = (string) $log;
+        $message = \substr($message, 11);
+        return \error_log($message . $eol, 3, $filename);
     }
 }
