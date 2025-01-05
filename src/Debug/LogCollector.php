@@ -10,6 +10,7 @@
 namespace Framework\Log\Debug;
 
 use Framework\Debug\Collector;
+use Framework\Debug\Debugger;
 use Framework\Log\Logger;
 use Framework\Log\LogLevel;
 
@@ -105,7 +106,7 @@ class LogCollector extends Collector
                 <th colspan="2">Level</th>
                 <th>Message</th>
                 <th>Written</th>
-                <th title="Seconds">Time to Log</th>
+                <th title="Milliseconds">Time to Log</th>
             </tr>
             </thead>
             <tbody>
@@ -121,7 +122,7 @@ class LogCollector extends Collector
                         <pre><code class="language-log"><?= \htmlentities($data['message']) ?></code></pre>
                     </td>
                     <td><?= $data['written'] ? 'Yes' : 'No' ?></td>
-                    <td><?= \round($data['end'] - $data['start'], 6) ?></td>
+                    <td><?= Debugger::roundSecondsToMilliseconds($data['end'] - $data['start']) ?></td>
                 </tr>
             <?php endforeach ?>
             </tbody>
