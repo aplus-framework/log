@@ -30,7 +30,8 @@ final class EmailLoggerTest extends TestCase
 
     public function testMakeHeaders() : void
     {
-        $logger = new class('developer@localhost.localdomain') extends EmailLogger {
+        $logger = new class('developer@localhost.localdomain') extends EmailLogger
+        {
             public function setConfig(array $config) : static
             {
                 return parent::setConfig($config);
