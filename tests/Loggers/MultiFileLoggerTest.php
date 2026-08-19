@@ -45,7 +45,7 @@ final class MultiFileLoggerTest extends TestCase
         $this->expectErrorMessage(
             'error_log(' . $destination . '): Failed to open stream: Permission denied'
         );*/
-        self::assertFalse(@$this->logger->logCritical('foo'));
+        self::assertFalse(@$this->logger->logCritical('foo')); // @phpstan-ignore-line
     }
 
     public function testMessage() : void

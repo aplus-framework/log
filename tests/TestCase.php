@@ -23,6 +23,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'foo',
             $this->logger->getLastLog()->message
         );
+        // @phpstan-ignore-next-line
         self::assertIsInt(
             $this->logger->getLastLog()->time
         );

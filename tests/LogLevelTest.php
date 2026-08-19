@@ -25,7 +25,7 @@ final class LogLevelTest extends TestCase
     {
         $current = -1;
         foreach (LogLevel::cases() as $case) {
-            self::assertIsInt($case->value);
+            self::assertIsInt($case->value); // @phpstan-ignore-line
             self::assertGreaterThan($current, $case->value);
             $current = $case->value;
         }
