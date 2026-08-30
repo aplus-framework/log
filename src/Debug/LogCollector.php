@@ -10,7 +10,7 @@
 namespace Framework\Log\Debug;
 
 use Framework\Debug\Collector;
-use Framework\Debug\Debugger;
+use Framework\Debug\Debugger as D;
 use Framework\Log\Logger;
 use Framework\Log\LogLevel;
 
@@ -55,11 +55,11 @@ class LogCollector extends Collector
         $destination = $this->logger->getDestination();
         if ($destination):
             ?>
-            <p><strong>Destination:</strong> <?= \htmlentities($destination) ?></p>
+            <p><strong>Destination:</strong> <?= D::esc($destination) ?></p>
         <?php
         endif;
         $level = $this->logger->getLevel(); ?>
-        <p><strong>Log Level:</strong> <?= \htmlentities(
+        <p><strong>Log Level:</strong> <?= D::esc(
             $level->value . ' ' . $level->name
         ) ?>
         </p>
@@ -79,7 +79,7 @@ class LogCollector extends Collector
                     ? ' class="active" title="Current level"'
                     : '' ?>>
                     <td><?= $case->value ?></td>
-                    <td><?= \htmlentities($case->name) ?></td>
+                    <td><?= D::esc($case->name) ?></td>
                 </tr>
             <?php endforeach ?>
             </tbody>
@@ -113,16 +113,16 @@ class LogCollector extends Collector
             <?php foreach ($this->getData() as $index => $data): ?>
                 <tr>
                     <td><?= $index + 1 ?></td>
-                    <td><?= \htmlentities($data['date']) ?></td>
-                    <td><?= \htmlentities($data['time']) ?></td>
-                    <td><?= \htmlentities($data['id']) ?></td>
-                    <td><?= \htmlentities((string) $data['level']) ?></td>
-                    <td><?= \htmlentities($data['levelName']) ?></td>
+                    <td><?= D::esc($data['date']) ?></td>
+                    <td><?= D::esc($data['time']) ?></td>
+                    <td><?= D::esc($data['id']) ?></td>
+                    <td><?= D::esc($data['level']) ?></td>
+                    <td><?= D::esc($data['levelName']) ?></td>
                     <td>
-                        <pre><code class="language-log"><?= \htmlentities($data['message']) ?></code></pre>
+                        <pre><code class="language-log"><?= D::esc($data['message']) ?></code></pre>
                     </td>
                     <td><?= $data['written'] ? 'Yes' : 'No' ?></td>
-                    <td><?= Debugger::roundSecondsToMilliseconds($data['end'] - $data['start']) ?></td>
+                    <td><?= D::roundSecondsToMilliseconds($data['end'] - $data['start']) ?></td>
                 </tr>
             <?php endforeach ?>
             </tbody>
