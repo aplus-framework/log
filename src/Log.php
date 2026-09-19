@@ -31,6 +31,11 @@ class Log implements \Stringable
 
     public function __toString() : string
     {
+        return $this->toString();
+    }
+
+    public function toString() : string
+    {
         return \implode(' ', [
             \date('Y-m-d H:i:s', $this->time),
             $this->level->name,
