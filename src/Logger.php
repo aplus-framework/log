@@ -10,7 +10,6 @@
 namespace Framework\Log;
 
 use Framework\Log\Debug\LogCollector;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class Logger.
@@ -140,7 +139,6 @@ abstract class Logger
      *
      * @return Log|null The last Log or null if the last was not accepted
      */
-    #[Pure]
     public function getLastLog() : ?Log
     {
         return $this->lastLog;
@@ -281,7 +279,6 @@ abstract class Logger
      *
      * @return string
      */
-    #[Pure]
     protected function replaceContext(string $message, array $context) : string
     {
         return \strtr($message, $context);
