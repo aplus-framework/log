@@ -103,6 +103,7 @@ class LogCollector extends Collector
                 <th>Date</th>
                 <th>Time</th>
                 <th>Id</th>
+                <th>IP</th>
                 <th colspan="2">Level</th>
                 <th>Message</th>
                 <th>Written</th>
@@ -116,6 +117,7 @@ class LogCollector extends Collector
                     <td><?= D::esc($data['date']) ?></td>
                     <td><?= D::esc($data['time']) ?></td>
                     <td><?= D::esc($data['id']) ?></td>
+                    <td><?= D::esc($data['ip']) ?></td>
                     <td><?= D::esc($data['level']) ?></td>
                     <td><?= D::esc($data['levelName']) ?></td>
                     <td>

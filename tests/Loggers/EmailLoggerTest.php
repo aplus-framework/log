@@ -42,8 +42,8 @@ final class EmailLoggerTest extends TestCase
                 return parent::makeHeaders($log);
             }
         };
-        $log = new Log(LogLevel::DEBUG, 'Foo', \time(), 'abc');
-        self::assertSame('Subject: Log DEBUG abc', $logger->makeHeaders($log));
+        $log = new Log(LogLevel::DEBUG, 'Foo', \time(), 'abc', '127.0.0.2');
+        self::assertSame('Subject: Log DEBUG abc 127.0.0.2', $logger->makeHeaders($log));
         $logger->setConfig([
             'headers' => [
                 'subject' => 'Foo bar',

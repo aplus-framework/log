@@ -32,7 +32,8 @@ final class LogTest extends TestCase
 
                 EOL,
             $this->time,
-            'abc123'
+            'abc123',
+            '127.0.0.2'
         );
     }
 
@@ -49,12 +50,13 @@ final class LogTest extends TestCase
                 EOL,
             $this->log->message
         );
+        self::assertSame('127.0.0.2', $this->log->ip);
     }
 
     public function testToString() : void
     {
         self::assertSame(
-            \date('Y-m-d H:i:s', $this->time) . ' INFO abc123 ' .
+            \date('Y-m-d H:i:s', $this->time) . ' INFO abc123 127.0.0.2 ' .
             <<<'EOL'
                 foo
                 bar baz

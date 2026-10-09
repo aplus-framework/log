@@ -193,4 +193,82 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         );
         $this->logger->log(10, 'Foo bar');
     }
+
+    /**
+     * @param string $destination
+     * @param LogLevel|int $level
+     * @param array<mixed> $config
+     */
+    protected function makeLogger(
+        string $destination,
+        LogLevel | int $level = LogLevel::DEBUG,
+        array $config = []
+    ) : Logger {
+        return new class($destination, $level, $config) extends Logger
+        {
+            protected function isCli() : bool
+            {
+                return false;
+            }
+
+            public function getIp() : string
+            {
+                return parent::getIp();
+            }
+
+            protected function write(Log $log) : bool
+            {
+                throw new \Exception('Not implemented');
+            }
+        };
+    }
+
+    public function testIpKeyWithRemoteAddr() : void
+    {
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.2';
+        $logger = $this->makeLogger('foo');
+        self::assertSame('127.0.0.2', $logger->getIp());
+    }
+
+    public function testIpKeyWithClosure() : void
+    {
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.2';
+        $logger = $this->makeLogger(
+            'foo',
+            config: [
+                'ip_key' => static function () {
+                    return '127.0.0.3';
+                },
+            ]
+        );
+        self::assertSame('127.0.0.3', $logger->getIp());
+    }
+
+    public function testIpKeyWithProxy() : void
+    {
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.2';
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '209.51.05.36';
+        $logger = $this->makeLogger(
+            'foo',
+            config: [
+                'ip_key' => 'HTTP_CF_CONNECTING_IP',
+            ]
+        );
+        self::assertSame('209.51.05.36', $logger->getIp());
+    }
+
+    public function testIpKeyWithException() : void
+    {
+        $logger = $this->makeLogger(
+            'foo',
+            config: [
+                'ip_key' => 'HTTP_FOO',
+            ]
+        );
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'The IP Key "HTTP_FOO" is not set in the $_SERVER'
+        );
+        $logger->getIp();
+    }
 }

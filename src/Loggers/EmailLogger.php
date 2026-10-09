@@ -37,7 +37,7 @@ class EmailLogger extends Logger
             $names[] = \strtolower($name);
         }
         if (!\in_array('subject', $names, true)) {
-            $headers['Subject'] = 'Log ' . $log->level->name . ' ' . $log->id;
+            $headers['Subject'] = 'Log ' . $log->level->name . ' ' . $log->id . ' ' . $log->ip;
         }
         $headerLines = [];
         foreach ($headers as $name => $value) {

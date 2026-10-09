@@ -20,13 +20,20 @@ class Log implements \Stringable
     public readonly string $message;
     public readonly int $time;
     public readonly string $id;
+    public readonly string $ip;
 
-    public function __construct(LogLevel $level, string $message, int $time, string $id)
-    {
+    public function __construct(
+        LogLevel $level,
+        string $message,
+        int $time,
+        string $id,
+        string $ip,
+    ) {
         $this->level = $level;
         $this->message = $this->sanitizeMessage($message);
         $this->time = $time;
         $this->id = $id;
+        $this->ip = $ip;
     }
 
     public function __toString() : string
@@ -40,6 +47,7 @@ class Log implements \Stringable
             \date('Y-m-d H:i:s', $this->time),
             $this->level->name,
             $this->id,
+            $this->ip,
             $this->message,
         ]);
     }

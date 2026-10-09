@@ -9,7 +9,9 @@
  */
 namespace Framework\Log;
 
+use Closure;
 use Framework\Log\Debug\LogCollector;
+use RuntimeException;
 
 /**
  * Class Logger.
@@ -106,8 +108,9 @@ abstract class Logger
         }
         $time = \time();
         $id = $this->makeId();
+        $ip = $this->getIp();
         $message = $this->replaceContext($message, $context);
-        $log = new Log($level, $message, $time, $id);
+        $log = new Log($level, $message, $time, $id, $ip);
         $written = $this->write($log);
         if ($written) {
             $this->lastLog = $log;
@@ -120,6 +123,7 @@ abstract class Logger
                 'date' => \date('Y-m-d', $time),
                 'time' => \date('H:i:s', $time),
                 'id' => $id,
+                'ip' => $ip,
                 'level' => $level->value,
                 'levelName' => $level->name,
                 'message' => $message,
@@ -127,6 +131,28 @@ abstract class Logger
             ]);
         }
         return $written;
+    }
+
+    protected function isCli() : bool
+    {
+        return \PHP_SAPI === 'cli' || \defined('STDIN');
+    }
+
+    protected function getIp() : string
+    {
+        if ($this->isCli()) {
+            return '127.0.0.1';
+        }
+        $ipKey = $this->getConfig()['ip_key'] ?? 'REMOTE_ADDR';
+        if ($ipKey instanceof Closure) {
+            return $ipKey();
+        }
+        if (!isset($_SERVER[$ipKey])) {
+            throw new RuntimeException(
+                'The IP Key "' . $ipKey . '" is not set in the $_SERVER'
+            );
+        }
+        return $_SERVER[$ipKey];
     }
 
     protected function makeId() : string
