@@ -3,3 +3,5 @@ parameters:
     paths:
         - src
         - tests
+    ignoreErrors:
+        - '#Call to protected method getIp\(\) of class Framework\\Log\\Logger\.#'
