@@ -12,7 +12,9 @@
         </properties>
     </rule>
     <!-- controversial -->
-    <rule ref="rulesets/controversial.xml"/>
+    <rule ref="rulesets/controversial.xml">
+        <exclude name="Superglobals"/>
+    </rule>
     <!-- design -->
     <rule ref="rulesets/design.xml"/>
     <!-- naming -->
