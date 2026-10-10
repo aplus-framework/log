@@ -9,6 +9,7 @@
  */
 namespace Framework\Log\Debug;
 
+use Framework\Debug\Activity;
 use Framework\Debug\Collector;
 use Framework\Debug\Debugger as D;
 use Framework\Log\Logger;
@@ -33,13 +34,13 @@ class LogCollector extends Collector
     {
         $activities = [];
         foreach ($this->getData() as $index => $data) {
-            $activities[] = [
-                'collector' => $this->getName(),
-                'class' => static::class,
-                'description' => 'Set log ' . ($index + 1),
-                'start' => $data['start'],
-                'end' => $data['end'],
-            ];
+            $activities[] = new Activity(
+                collector: $this->getName(),
+                class: static::class,
+                description: 'Set log ' . ($index + 1),
+                start: $data['start'],
+                end: $data['end'],
+            );
         }
         return $activities;
     }

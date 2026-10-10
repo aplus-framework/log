@@ -9,6 +9,7 @@
  */
 namespace Tests\Log\Debug;
 
+use Framework\Debug\Activity;
 use Framework\Log\Debug\LogCollector;
 use Framework\Log\Logger;
 use Framework\Log\Loggers\FileLogger;
@@ -105,15 +106,9 @@ final class LogCollectorTest extends TestCase
     public function testActivities() : void
     {
         $this->makeLogger()->logInfo('foo');
-        self::assertSame(
-            [
-                'collector',
-                'class',
-                'description',
-                'start',
-                'end',
-            ],
-            \array_keys($this->collector->getActivities()[0])
+        self::assertInstanceOf(
+            Activity::class,
+            $this->collector->getActivities()[0]
         );
     }
 }
