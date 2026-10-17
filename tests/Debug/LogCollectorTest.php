@@ -28,6 +28,9 @@ final class LogCollectorTest extends TestCase
     protected function makeLogger() : Logger
     {
         $destination = \sys_get_temp_dir() . '/tests.log';
+        if (!\is_file($destination)) {
+            \touch($destination);
+        }
         \chmod($destination, 755);
         $logger = new FileLogger(destination: $destination);
         $logger->setDebugCollector($this->collector);
