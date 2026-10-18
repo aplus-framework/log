@@ -134,6 +134,21 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         self::assertInstanceOf(Log::class, $this->logger->getLastLog());
     }
 
+    public function testDisableEnable() : void
+    {
+        self::assertNull($this->logger->getLastLog());
+        self::assertTrue($this->logger->logDebug('foo'));
+        self::assertNotNull($this->logger->getLastLog());
+        $this->logger->disable();
+        self::assertNotNull($this->logger->getLastLog());
+        self::assertFalse($this->logger->logDebug('foo'));
+        self::assertNull($this->logger->getLastLog());
+        $this->logger->enable();
+        self::assertNull($this->logger->getLastLog());
+        self::assertTrue($this->logger->logDebug('foo'));
+        self::assertNotNull($this->logger->getLastLog());
+    }
+
     public function testContext() : void
     {
         self::assertTrue($this->logger->logDebug('foo {a}bar', ['{a}' => 'x ']));

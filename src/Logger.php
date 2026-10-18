@@ -36,6 +36,7 @@ abstract class Logger
     protected LogLevel $level = LogLevel::DEBUG;
     protected ?Log $lastLog = null;
     protected LogCollector $debugCollector;
+    protected bool $enabled = true;
 
     /**
      * Logger constructor.
@@ -103,6 +104,9 @@ abstract class Logger
             $level = LogLevel::from($level);
         }
         $this->lastLog = null;
+        if (!$this->isEnabled()) {
+            return false;
+        }
         if ($level->value < $this->getLevel()->value) {
             return false;
         }
@@ -314,6 +318,23 @@ abstract class Logger
     {
         $this->debugCollector = $debugCollector;
         $this->debugCollector->setLogger($this);
+        return $this;
+    }
+
+    public function isEnabled() : bool
+    {
+        return $this->enabled;
+    }
+
+    public function disable() : static
+    {
+        $this->enabled = false;
+        return $this;
+    }
+
+    public function enable() : static
+    {
+        $this->enabled = true;
         return $this;
     }
 

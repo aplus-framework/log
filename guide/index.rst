@@ -10,6 +10,7 @@ Aplus Framework Log Library.
 - `Getting Started`_
 - `Log Levels`_
 - `Loggers`_
+- `Disabling Logs`_
 - `Conclusion`_
 
 Installation
@@ -197,6 +198,19 @@ logging mechanism or a file.
     use Framework\Log\Loggers\SysLogger;
 
     $logger = new SysLogger();
+
+Disabling Logs
+--------------
+
+If, for any reason (example: the site under a flood attack...), you need to
+disable the writing of logs, use the ``disable`` method:
+
+.. code-block:: php
+
+    $logger->disable();
+
+You can re-enable them using the ``enable`` method. Or simply by removing the
+call to the ``disable`` method.
 
 Conclusion
 ----------
