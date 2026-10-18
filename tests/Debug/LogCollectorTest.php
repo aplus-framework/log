@@ -31,7 +31,6 @@ final class LogCollectorTest extends TestCase
         if (!\is_file($destination)) {
             \touch($destination);
         }
-        \chmod($destination, 755);
         $logger = new FileLogger(destination: $destination);
         $logger->setDebugCollector($this->collector);
         return $logger;
