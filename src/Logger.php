@@ -88,9 +88,9 @@ abstract class Logger
     /**
      * Logs with an arbitrary level.
      *
-     * @param LogLevel|int $level
-     * @param string $message
-     * @param array<string> $context
+     * @param LogLevel|int $level The log level
+     * @param string $message The log message
+     * @param array<string> $context Excerpts to be replaced in the message
      *
      * @return bool True if the log was written, otherwise false
      */
@@ -321,17 +321,32 @@ abstract class Logger
         return $this;
     }
 
+    /**
+     * Indicates whether the logger is enabled to write logs.
+     *
+     * @return bool
+     */
     public function isEnabled() : bool
     {
         return $this->enabled;
     }
 
+    /**
+     * Disables log writing.
+     *
+     * @return static
+     */
     public function disable() : static
     {
         $this->enabled = false;
         return $this;
     }
 
+    /**
+     * Enables log writing.
+     *
+     * @return static
+     */
     public function enable() : static
     {
         $this->enabled = true;
