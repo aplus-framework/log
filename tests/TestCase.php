@@ -123,12 +123,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $this->logger->setLevel(LogLevel::INFO);
         self::assertNull($this->logger->getLastLog());
-        self::assertTrue($this->logger->logDebug('foo'));
+        self::assertFalse($this->logger->logDebug('foo'));
         self::assertNull($this->logger->getLastLog());
         self::assertTrue($this->logger->logInfo('foo'));
         self::assertInstanceOf(Log::class, $this->logger->getLastLog());
         $this->logger->setLevel(LogLevel::ERROR);
-        self::assertTrue($this->logger->logInfo('foo'));
+        self::assertFalse($this->logger->logInfo('foo'));
         self::assertNull($this->logger->getLastLog());
         self::assertTrue($this->logger->logEmergency('foo'));
         self::assertInstanceOf(Log::class, $this->logger->getLastLog());

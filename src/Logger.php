@@ -91,7 +91,7 @@ abstract class Logger
      * @param string $message
      * @param array<string> $context
      *
-     * @return bool
+     * @return bool True if the log was written, otherwise false
      */
     public function log(LogLevel | int $level, string $message, array $context = []) : bool
     {
@@ -104,7 +104,7 @@ abstract class Logger
         }
         $this->lastLog = null;
         if ($level->value < $this->getLevel()->value) {
-            return true;
+            return false;
         }
         $time = \time();
         $id = $this->makeId();
