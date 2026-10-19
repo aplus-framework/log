@@ -9,7 +9,7 @@
  */
 namespace Tests\Log;
 
-use Framework\Log\LogLevel;
+use Aplus\Log\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 final class LogLevelTest extends TestCase

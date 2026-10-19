@@ -7,13 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Framework\Log\Debug;
+namespace Aplus\Log\Debug;
 
-use Framework\Debug\Activity;
-use Framework\Debug\Collector;
-use Framework\Debug\Debugger as D;
-use Framework\Log\Logger;
-use Framework\Log\LogLevel;
+use Aplus\Debug\Activity;
+use Aplus\Debug\Collector;
+use Aplus\Debug\Debugger as D;
+use Aplus\Log\Logger;
+use Aplus\Log\LogLevel;
 
 /**
  * Class LogCollector.

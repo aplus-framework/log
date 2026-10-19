@@ -9,9 +9,9 @@
  */
 namespace Tests\Log;
 
-use Framework\Log\Log;
-use Framework\Log\Logger;
-use Framework\Log\LogLevel;
+use Aplus\Log\Log;
+use Aplus\Log\Logger;
+use Aplus\Log\LogLevel;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -193,7 +193,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         self::assertSame(LogLevel::WARNING, $this->logger->getLevel());
         $this->expectException(\ValueError::class);
         $this->expectExceptionMessage(
-            '23 is not a valid backing value for enum Framework\Log\LogLevel'
+            '23 is not a valid backing value for enum Aplus\Log\LogLevel'
         );
         $this->logger->setLevel(23);
     }
@@ -204,7 +204,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         self::assertSame(LogLevel::EMERGENCY, $this->logger->getLastLog()->level);
         $this->expectException(\ValueError::class);
         $this->expectExceptionMessage(
-            '10 is not a valid backing value for enum Framework\Log\LogLevel'
+            '10 is not a valid backing value for enum Aplus\Log\LogLevel'
         );
         $this->logger->log(10, 'Foo bar');
     }

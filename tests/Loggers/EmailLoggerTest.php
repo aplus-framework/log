@@ -9,9 +9,9 @@
  */
 namespace Tests\Log\Loggers;
 
-use Framework\Log\Log;
-use Framework\Log\Loggers\EmailLogger;
-use Framework\Log\LogLevel;
+use Aplus\Log\Log;
+use Aplus\Log\Loggers\EmailLogger;
+use Aplus\Log\LogLevel;
 use Tests\Log\TestCase;
 
 final class EmailLoggerTest extends TestCase

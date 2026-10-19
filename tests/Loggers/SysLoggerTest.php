@@ -9,7 +9,7 @@
  */
 namespace Tests\Log\Loggers;
 
-use Framework\Log\Loggers\SysLogger;
+use Aplus\Log\Loggers\SysLogger;
 use Tests\Log\TestCase;
 
 final class SysLoggerTest extends TestCase

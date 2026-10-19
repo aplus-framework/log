@@ -4,4 +4,4 @@ parameters:
         - src
         - tests
     ignoreErrors:
-        - '#Call to protected method getIp\(\) of class Framework\\Log\\Logger\.#'
+        - '#Call to protected method getIp\(\) of class Aplus\\Log\\Logger\.#'

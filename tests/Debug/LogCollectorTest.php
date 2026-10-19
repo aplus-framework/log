@@ -9,11 +9,11 @@
  */
 namespace Tests\Log\Debug;
 
-use Framework\Debug\Activity;
-use Framework\Log\Debug\LogCollector;
-use Framework\Log\Logger;
-use Framework\Log\Loggers\FileLogger;
-use Framework\Log\LogLevel;
+use Aplus\Debug\Activity;
+use Aplus\Log\Debug\LogCollector;
+use Aplus\Log\Logger;
+use Aplus\Log\Loggers\FileLogger;
+use Aplus\Log\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 final class LogCollectorTest extends TestCase

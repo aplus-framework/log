@@ -9,7 +9,7 @@
  */
 namespace Tests\Log\Debug;
 
-use Framework\Log\Debug\LogCollection;
+use Aplus\Log\Debug\LogCollection;
 use PHPUnit\Framework\TestCase;
 
 final class LogCollectionTest extends TestCase

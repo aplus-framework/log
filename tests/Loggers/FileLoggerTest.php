@@ -9,7 +9,7 @@
  */
 namespace Tests\Log\Loggers;
 
-use Framework\Log\Loggers\FileLogger;
+use Aplus\Log\Loggers\FileLogger;
 use Tests\Log\TestCase;
 
 final class FileLoggerTest extends TestCase

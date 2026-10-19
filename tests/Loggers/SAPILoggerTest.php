@@ -9,7 +9,7 @@
  */
 namespace Tests\Log\Loggers;
 
-use Framework\Log\Loggers\SAPILogger;
+use Aplus\Log\Loggers\SAPILogger;
 use Tests\Log\TestCase;
 
 final class SAPILoggerTest extends TestCase

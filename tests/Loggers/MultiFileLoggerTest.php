@@ -9,7 +9,7 @@
  */
 namespace Tests\Log\Loggers;
 
-use Framework\Log\Loggers\MultiFileLogger;
+use Aplus\Log\Loggers\MultiFileLogger;
 use Tests\Log\TestCase;
 
 final class MultiFileLoggerTest extends TestCase
