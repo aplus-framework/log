@@ -45,7 +45,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Framework\\Log\\": "src/"
+            "Aplus\\Log\\": "src/"
         }
     },
     "autoload-dev": {
