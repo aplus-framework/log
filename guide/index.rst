@@ -35,8 +35,8 @@ file:
 
 .. code-block:: php
 
-    use Framework\Log\Loggers\FileLogger;
-    use Framework\Log\LogLevel;
+    use Aplus\Log\Loggers\FileLogger;
+    use Aplus\Log\LogLevel;
 
     $destination = __DIR__ . '/app.log';
     $level = LogLevel::CRITICAL;
@@ -132,7 +132,7 @@ The message is sent by email to the address in the destination parameter.
 
 .. code-block:: php
 
-    use Framework\Log\Loggers\EmailLogger;
+    use Aplus\Log\Loggers\EmailLogger;
 
     $destination = 'sysadmin@domain.tld';
     $logger = new EmailLogger($destination);
@@ -156,7 +156,7 @@ The message is appended to the file destination.
 
 .. code-block:: php
 
-    use Framework\Log\Loggers\FileLogger;
+    use Aplus\Log\Loggers\FileLogger;
 
     $destination = __DIR__ . '/app.log';
     $logger = new FileLogger($destination);
@@ -169,7 +169,7 @@ as destination.
 
 .. code-block:: php
 
-    use Framework\Log\Loggers\MultiFileLogger;
+    use Aplus\Log\Loggers\MultiFileLogger;
 
     $destination = __DIR__ . '/logs';
     $logger = new MultiFileLogger($destination);
@@ -183,7 +183,7 @@ The message is sent directly to the SAPI logging handler.
 
 .. code-block:: php
 
-    use Framework\Log\Loggers\SAPILogger;
+    use Aplus\Log\Loggers\SAPILogger;
 
     $logger = new SAPILogger();
 
@@ -195,7 +195,7 @@ logging mechanism or a file.
 
 .. code-block:: php
 
-    use Framework\Log\Loggers\SysLogger;
+    use Aplus\Log\Loggers\SysLogger;
 
     $logger = new SysLogger();
 
